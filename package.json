@@ -1,0 +1,19 @@
+{
+  "name": "udentalserver",
+  "version": "1.0.0",
+  "description": "Servidor para la pagina del consultorio dental de la Universidad de Cuenca",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonnHenry/UDentalServer.git"
+  },
+  "author": "Jonnathan Campoberde, Miguel Macías",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonnHenry/UDentalServer/issues"
+  },
+  "homepage": "https://github.com/JonnHenry/UDentalServer#readme"
+}
