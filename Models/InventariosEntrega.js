@@ -25,12 +25,27 @@ module.exports = function(sequelize){
             type: DataTypes.DATEONLY,
             allowNull: false
         },
-        PersonaRealiza: {
-            type: DataTypes.BIGINT(11), //Es la cedula para poder identificar a la persona
+        PersonaEntrega: {
+            type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
+            allowNull: false
+        },
+        PersonaRecibe: {
+            type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
+            allowNull: false
+        },
+        Categoria: {
+            type: DataTypes.ENUM('Equipos', 'Instrumentos','Insumos'),
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "El campo no puede ser vacio" }
+            }
+        },
+        Cantidad: {
+            type: DataTypes.INTEGER, //Es la cedula para poder identificar a la persona
             allowNull: false
         }
     },{
-        timestamps: true
+        timestamps: false
     });
     return InventariosEntrega;
 }

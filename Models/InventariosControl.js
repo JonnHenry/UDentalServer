@@ -16,7 +16,7 @@ module.exports = function(sequelize){
                 notEmpty: { msg: "El campo no puede ser vacio" }
             } 
         },
-        Descripcion: {
+        Observacion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Ninguna"
@@ -25,16 +25,12 @@ module.exports = function(sequelize){
             type: DataTypes.DATEONLY,
             allowNull: false
         },
-        PersonaEntrega: {
-            type: DataTypes.BIGINT(11), //Es la cedula para poder identificar a la persona
-            allowNull: false
-        },
-        PersonaRecibe: {
-            type: DataTypes.BIGINT(11), //Es la cedula para poder identificar a la persona
+        PersonaRealiza: {
+            type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
             allowNull: false
         }
     },{
-        timestamps: true
+        timestamps: false
     });
     return InventariosControl;
 }

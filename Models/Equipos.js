@@ -9,19 +9,6 @@ module.exports = function(sequelize){
             unique: true,
             allowNull: false         
         },
-        Nombre: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: { msg: "El campo no puede ser vacio" }
-            } 
-        },
-        Descripcion: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: "Ninguna"
-        },
-        
         Observacion: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -36,17 +23,9 @@ module.exports = function(sequelize){
             type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: 0
-        },
-        Marca: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        FechaAdquisicion: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
         }
     },{
-        timestamps: true
+        timestamps: false
     });
     return Equipos;
 }
