@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/JonnHenry/UDentalServer/issues"
   },
-  "homepage": "https://github.com/JonnHenry/UDentalServer#readme"
+  "homepage": "https://github.com/JonnHenry/UDentalServer#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.8.7"
+  }
 }

@@ -1,7 +1,7 @@
 const DataTypes = require('sequelize/lib/data-types');
 
 module.exports = function(sequelize){
-    const Instrumentos = sequelize.define('Instrumentos',
+    const InventariosEntrega = sequelize.define('InventariosEntrega',
     {
         Id:{
             type : DataTypes.BIGINT(11),
@@ -21,22 +21,16 @@ module.exports = function(sequelize){
             allowNull: true,
             defaultValue: "Ninguna"
         },
-        Cantidad : {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            defaultValue: 0
-        },
-        Estado:{
-            type: DataTypes.BOOLEAN,
-            allowNull: true,
-            defaultValue: false
-        },
-        FechaAdquisicion: {
+        Fecha: {
             type: DataTypes.DATEONLY,
+            allowNull: false
+        },
+        PersonaRealiza: {
+            type: DataTypes.BIGINT(11), //Es la cedula para poder identificar a la persona
             allowNull: false
         }
     },{
         timestamps: true
     });
-    return Instrumentos;
+    return InventariosEntrega;
 }
