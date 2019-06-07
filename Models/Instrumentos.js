@@ -3,24 +3,23 @@ const DataTypes = require('sequelize/lib/data-types');
 module.exports = function(sequelize){
     const Instrumentos = sequelize.define('Instrumentos',
     {
-        Id:{
+        IdProducto:{
             type : DataTypes.BIGINT(11),
             primaryKey: true,
             unique: true,
-            allowNull: false         
+            allowNull: false,
+            references: {
+                model: 'Productos',
+                key: 'Id'
+            }         
         },
         Observacion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Ninguna"
         },
-        Stock : {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            defaultValue: 0
-        },
         Estado:{
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.ENUM('Obsoleto', 'Buen Estado'), //Estados que puede tener un producto
             allowNull: true,
             defaultValue: false
         }
