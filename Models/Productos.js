@@ -4,7 +4,7 @@ module.exports = function(sequelize){
     const Productos = sequelize.define('Productos',
     {
         Id:{
-            type : DataTypes.BIGINT(11),
+            type : DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
@@ -16,9 +16,9 @@ module.exports = function(sequelize){
             onUpdate: 'CASCADE'
         },
         Descripcion:{
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: true,
-            defaultValue: false,
+            defaultValue: 'Ninguna',
             onUpdate: 'CASCADE'
         },
         PrecioUnitario:{
@@ -29,11 +29,16 @@ module.exports = function(sequelize){
         },
         Stock : {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0
+        },
+        Activo: {
+            type:  DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true 
         }
     },{
-        timestamps: false
+        timestamps: true
     });
     return Productos;
 }

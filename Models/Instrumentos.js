@@ -4,7 +4,7 @@ module.exports = function(sequelize){
     const Instrumentos = sequelize.define('Instrumentos',
     {
         IdProducto:{
-            type : DataTypes.BIGINT(11),
+            type : DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
@@ -20,8 +20,7 @@ module.exports = function(sequelize){
         },
         Estado:{
             type: DataTypes.ENUM('Obsoleto', 'Buen Estado'), //Estados que puede tener un producto
-            allowNull: true,
-            defaultValue: false
+            allowNull: true
         }
     },{
         timestamps: false

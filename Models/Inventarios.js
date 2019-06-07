@@ -4,7 +4,7 @@ module.exports = function(sequelize){
     const Inventarios = sequelize.define('Inventarios',
     {
         Id:{
-            type : DataTypes.BIGINT(11),
+            type : DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false         
@@ -20,14 +20,9 @@ module.exports = function(sequelize){
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Ninguna"
-        },
-        Fecha: {
-            type: DataTypes.DATE,
-            defaultValue: Sequelize.NOW,
-            allowNull: false
         }
     },{
-        timestamps: false
+        timestamps: true
     });
     return Inventarios;
 }

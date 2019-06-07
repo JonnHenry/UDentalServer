@@ -4,7 +4,7 @@ module.exports = function(sequelize){
     const InventariosControl = sequelize.define('InventariosControl',
     {
         IdInventario:{
-            type : DataTypes.BIGINT(11),
+            type : DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false ,
