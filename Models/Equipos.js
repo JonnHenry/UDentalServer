@@ -25,7 +25,7 @@ module.exports = function(sequelize){
         },
         Estado:{
             type: DataTypes.ENUM('Obsoleto', 'Buen Estado','Reparación'), //Estados que puede tener un producto
-            allowNull: true
+            allowNull: false
         }
     },{
         timestamps: false

@@ -27,7 +27,7 @@ module.exports = function(sequelize){
             defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
-        Stock : {
+        Stock: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0

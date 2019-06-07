@@ -8,12 +8,10 @@ const conexion = new Sequelize('UCuencaDental', 'admin', '123456789', {
     }
 });
 
-
 var models=require('../models')(conexion);
 
-
 const connectDB = ()=>{
-    conexion.sync({force: true}).then(() => {
+    conexion.sync().then(() => {
         console.log('Tablas Creadas exitosamente!')
     },
     (err) => 

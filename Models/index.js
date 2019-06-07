@@ -9,9 +9,10 @@ module.exports = function (sequelize){
     const InventariosEntrega = require('./InventariosEntrega')(sequelize);
     const Tratamientos = require('./Tratamientos')(sequelize);
     //Un Equipo,insumo o instrumento pertenece a una Inventario ya sea de control o entrega
-    
+
     Productos.belongsToMany(Inventarios, { through: 'InventarioProductos'});
     Inventarios.belongsToMany(Productos,{ through: 'InventarioProductos'});
+
 
     Tratamientos.belongsToMany(Productos, {through: 'TratamientoProductos'});
     Inventarios.belongsToMany(Tratamientos, { through: 'TratamientoProductos' });
