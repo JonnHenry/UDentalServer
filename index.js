@@ -3,7 +3,7 @@
 const connectDB = require('./db').connectDB;
 connectDB(); //Se realiza la conexión a la base de datos
 var express = require('express');
-const port = 3030; //Puerto donde va a funcionar expres.js
+const port = 8080; //Puerto donde va a funcionar expres.js
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const models=require('./db/index').models;
