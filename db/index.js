@@ -13,7 +13,7 @@ const conexion = new Sequelize('postgres://ebyivwns:DcVXBBQD5JT5gT9ZAIcc3wCzMYgx
 var models=require('../models')(conexion);
 
 const connectDB = ()=>{
-    conexion.sync({force: true}).then(() => {
+    conexion.sync().then(() => {
         console.log('Tablas Creadas exitosamente!')
     },
     (err) => 

@@ -263,7 +263,7 @@ app.post('/insumo/nuevo', (req, res) => { // Para poder crear un producto
   })
 });
 
-app.get('/insumos/all', (req, res) => { // Para poder obtener todos los inventarios y el numero de inventarios
+app.get('/insumo/all', (req, res) => { // Para poder obtener todos los inventarios y el numero de inventarios
   Insumos.findAndCountAll()
     .then(result => {
       res.json({
@@ -332,7 +332,7 @@ app.get('/inventario/all', (req, res) => { // Para poder obtener todos los inven
 
 
 app.post('/tratamiento/nuevo', (req, res) => { // Para poder crear un producto
-  Inventarios.findOrCreate({
+  Tratamientos.findOrCreate({
     where: {
       Id: req.body.id,
     },
