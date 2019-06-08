@@ -18,7 +18,7 @@ const connectDB = ()=>{
     },
     (err) => 
         {
-            //Sequelize error
+        //Sequelize error
             console.log("Error connecting DB, retrying...")
             setTimeout(connectDB, 5000);
         });
