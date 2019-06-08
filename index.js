@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
-
-
 //Fin de la declaración de las variables
 
 //Asignacion de los modelos
@@ -340,7 +338,7 @@ app.post('/tratamiento/nuevo', (req, res) => { // Para poder crear un producto
     },
     defaults: {
       Nombre: req.body.nombre,
-      Duracion: req.body.descripcion,
+      Duracion: req.body.duracion,
       Precion: req.body.fecha,
       Descripcion: req.body.descripcion
     }
@@ -382,8 +380,6 @@ app.get('/tratamiento/all', (req, res) => { // Para poder obtener todos los inve
       });
     })
 });
-
-
 
 
 
