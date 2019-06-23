@@ -1,19 +1,11 @@
-//Variables
 
+const app = require('./app').app;
 const connectDB = require('./db').connectDB;
-connectDB(); //Se realiza la conexión a la base de datos
-var express = require('express');
-const port = 8080; //Puerto donde va a funcionar expres.js
-var cors = require('cors');
-const bodyParser = require('body-parser');
+connectDB(); 
 const models=require('./db/index').models;
 const conexion = require('./db/index').conexion;
-var app = express();
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-app.use(bodyParser.json());
-app.use(cors());
+
+
 //Fin de la declaración de las variables
 
 //Asignacion de los modelos
@@ -388,6 +380,3 @@ app.get("/", (req, res) => {
   res.send("<h1>Servidor funcionando correctamente</h1>");
 })
 
-app.listen(port, () => {
-  console.log('Escuchando en el puerto' + port)
-});

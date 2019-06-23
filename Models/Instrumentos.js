@@ -1,26 +1,24 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-module.exports = function(sequelize){
-    const Instrumentos = sequelize.define('instrumentos',
-    {
-        id_producto:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const Instrumentos = sequelize.define('instrumentos', {
+        id_producto: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
             references: {
                 model: 'productos',
-                key: 'id',
-                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
-            }         
+                key: 'id'
+            }
         },
         observacion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Ninguna"
         },
-        estado:{
-            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'), 
+        estado: {
+            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'),
             allowNull: false,
             defaultValue: 'Buen Estado'
         },
@@ -29,7 +27,7 @@ module.exports = function(sequelize){
             allowNull: false,
             defaultValue: 0
         }
-    },{
+    }, {
         indexes: [{
             unique: false,
             fields: ['estado']

@@ -9,8 +9,7 @@ module.exports = function (sequelize) {
             allowNull: false,
             references: {
                 model: 'productos',
-                key: 'id',
-                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
+                key: 'id'
             }
         },
         marca: {
@@ -33,7 +32,7 @@ module.exports = function (sequelize) {
             allowNull: false,
             defaultValue: 0
         }
-    }, {
+    },{ 
         indexes: [{
                 unique: false,
                 fields: ['marca']
@@ -46,5 +45,6 @@ module.exports = function (sequelize) {
         modelName: 'equipos',
         timestamps: false
     });
+    
     return Equipos;
 }

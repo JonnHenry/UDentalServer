@@ -1,7 +1,5 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-//TODO: Ver como crear una clave primaria compuesta
-
 module.exports = function(sequelize){
     const InventariosControl = sequelize.define('inventarios_control',
     {
@@ -12,8 +10,7 @@ module.exports = function(sequelize){
             allowNull: false ,
             references: {
                 model: 'inventarios',
-                key: 'id',
-                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
+                key: 'id'
             }          
         },
         persona_realiza: {
