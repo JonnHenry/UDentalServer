@@ -1,7 +1,7 @@
 const DataTypes = require('sequelize/lib/data-types');
 
 module.exports = function (sequelize) {
-    const Productos = sequelize.define('tratamiento_productos', {
+    const TratamientosProductos = sequelize.define('tratamiento_productos', {
         id_tratamiento: {
             type: DataTypes.BIGINT,
             primaryKey: true,
@@ -30,5 +30,5 @@ module.exports = function (sequelize) {
         modelName: 'tratamiento_productos',
         timestamps: false
     });
-    return Productos;
+    return TratamientosProductos;
 }
