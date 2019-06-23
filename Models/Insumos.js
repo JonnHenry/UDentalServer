@@ -1,24 +1,29 @@
 const DataTypes = require('sequelize/lib/data-types');
 
 module.exports = function(sequelize){
-    const Insumos = sequelize.define('Insumos',
+    const Insumos = sequelize.define('insumos',
     {
-        IdProducto:{
+        id_producto:{
             type : DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
             references: {
-                model: 'Productos',
-                key: 'Id'
+                model: 'productos',
+                key: 'id'
             }         
         },
-        FechaCaducidad: {
-            type: DataTypes.DATEONLY,//Solo se debe de ingresar la fecha
+        fecha_caducidad: {
+            type: DataTypes.DATEONLY,
             allowNull: false
         }
     },{
-        timestamps: false
+        indexes: [{
+            unique: true,
+            fields: ['fecha_caducidad']
+        }],
+        timestamps: false,
+        modelName: 'insumos'
     });
     return Insumos;
 }

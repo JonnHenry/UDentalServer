@@ -1,44 +1,52 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-module.exports = function(sequelize){
-    const Productos = sequelize.define('Productos',
-    {
-        Id:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const Productos = sequelize.define('productos', {
+        id: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false,
-            onUpdate: 'CASCADE'         
+            allowNull: false
         },
-        Nombre: {
+        nombre: {
             type: DataTypes.STRING,
             allowNull: false,
             onUpdate: 'CASCADE'
         },
-        Descripcion:{
+        descripcion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: 'Ninguna',
             onUpdate: 'CASCADE'
         },
-        PrecioUnitario:{
+        precio_unitario: {
             type: DataTypes.FLOAT,
             allowNull: false,
             defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
-        Stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
+        fecha_creacion: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
         },
-        Activo: {
-            type:  DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true 
+        fecha_actualizacion: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
         }
-    },{
-        timestamps: true
+    }, {
+        indexes: [{
+                unique: false,
+                fields: ['nombre', 'fecha_creacion']
+            },
+            {
+                unique: false,
+                fields: ['nombre', 'fecha_actualizacion']
+            }
+        ],
+        modelName: 'productos',
+        timestamps: false
     });
     return Productos;
 }

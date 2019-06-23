@@ -1,33 +1,44 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-module.exports = function(sequelize){
-    const Equipos = sequelize.define('Equipos',
-    {
-        IdProducto:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const Equipos = sequelize.define('equipos', {
+        id_producto: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
             references: {
-                model: 'Productos',
-                key: 'Id'
-            }         
+                model: 'productos',
+                key: 'id',
+                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+            }
         },
-        Marca: {
+        marca: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: "No especificada"
         },
-        Observacion: {
+        observacion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Ninguna"
         },
-        Estado:{
-            type: DataTypes.ENUM('Obsoleto', 'Buen Estado','Reparación'), //Estados que puede tener un producto
-            allowNull: false
+        estado: {
+            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'), 
+            allowNull: false,
+            defaultValue: 'Buen Estado'
+        },
+        stock: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
-    },{
+    }, {
+        indexes: [{
+            unique: true,
+            fields: ['marca','estado']
+        }],
+        modelName: 'equipos',
         timestamps: false
     });
     return Equipos;

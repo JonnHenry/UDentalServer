@@ -1,38 +1,42 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-module.exports = function(sequelize){
-    const Tratamientos = sequelize.define('Tratamientos',
-    {
-        Id:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const Tratamientos = sequelize.define('tratamientos', {
+        id: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
             allowNull: false,
-            onUpdate: 'CASCADE'         
+            onUpdate: 'CASCADE'
         },
-        Nombre: {
+        nombre: {
             type: DataTypes.STRING,
             allowNull: false,
             onUpdate: 'CASCADE'
         },
-        Duracion:{
-            type: DataTypes.STRING,
+        duracion_dias: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 'No definido',
-            onUpdate: 'CASCADE'
+            onUpdate: 'CASCADE',
+            defaultValue: 1
         },
-        Precio:{
+        precio: {
             type: DataTypes.FLOAT,
             allowNull: false,
             defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
-        Descripcion : {
+        descripcion: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: 0
         }
-    },{
+    }, {
+        indexes: [{
+            unique: true,
+            fields: ['nombre']
+        }],
+        modelName: 'tratamientos',
         timestamps: false
     });
     return Tratamientos;
