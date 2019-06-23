@@ -10,7 +10,7 @@ module.exports = function (sequelize) {
             references: {
                 model: 'productos',
                 key: 'id',
-                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
             }
         },
         marca: {

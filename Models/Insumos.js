@@ -10,7 +10,8 @@ module.exports = function(sequelize){
             allowNull: false,
             references: {
                 model: 'productos',
-                key: 'id'
+                key: 'id',
+                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
             }         
         },
         fecha_caducidad: {

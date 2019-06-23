@@ -10,7 +10,7 @@ module.exports = function (sequelize) {
             references: {
                 model: 'tratamientos',
                 key: 'id',
-                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
             }
         },
         id_producto: {
@@ -19,7 +19,7 @@ module.exports = function (sequelize) {
             references: {
                 model: 'productos',
                 key: 'id',
-                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
             }
         },
         cantidad_producto: {

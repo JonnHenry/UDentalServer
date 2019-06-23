@@ -10,8 +10,9 @@ module.exports = function (sequelize) {
             unique: true,
             allowNull: false,
             references: {
-                model: 'Inventarios',
-                key: 'Id'
+                model: 'inventarios',
+                key: 'id',
+                deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
             }
         },
         persona_entrega: {
