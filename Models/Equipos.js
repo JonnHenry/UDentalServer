@@ -24,7 +24,7 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         estado: {
-            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'), 
+            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'),
             allowNull: false,
             defaultValue: 'Buen Estado'
         },
@@ -35,9 +35,14 @@ module.exports = function (sequelize) {
         }
     }, {
         indexes: [{
-            unique: true,
-            fields: ['marca','estado']
-        }],
+                unique: false,
+                fields: ['marca']
+            },
+            {
+                unique: false,
+                fields: ['estado']
+            }
+        ],
         modelName: 'equipos',
         timestamps: false
     });

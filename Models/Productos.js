@@ -39,11 +39,15 @@ module.exports = function (sequelize) {
     }, {
         indexes: [{
                 unique: false,
-                fields: ['nombre', 'fecha_creacion']
+                fields: ['fecha_creacion']
             },
             {
                 unique: false,
-                fields: ['nombre', 'fecha_actualizacion']
+                fields: ['fecha_actualizacion']
+            },
+            {
+                unique: false,
+                fields: ['nombre']
             }
         ],
         modelName: 'productos',

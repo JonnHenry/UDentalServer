@@ -44,8 +44,7 @@ module.exports = function(sequelize){
         {
             unique: false,
             fields: ['nombre']
-        },
-        
+        }        
     ],
         timestamps: false
     });
