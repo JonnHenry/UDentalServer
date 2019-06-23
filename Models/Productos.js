@@ -33,7 +33,8 @@ module.exports = function (sequelize) {
         fecha_actualizacion: {
             type: 'TIMESTAMP',
             defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false
+            allowNull: false,
+            onUpdate: true
         }
     }, {
         indexes: [{

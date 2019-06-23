@@ -30,6 +30,17 @@ module.exports = function (sequelize) {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: 0
+        },
+        fecha_creacion: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
+        },
+        fecha_actualizacion: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false,
+            onUpdate: true
         }
     }, {
         indexes: [{
