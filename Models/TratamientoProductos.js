@@ -6,12 +6,21 @@ module.exports = function (sequelize) {
             type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false
+            allowNull: false,
+            references: {
+                model: 'tratamientos',
+                key: 'id',
+                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+            }
         },
         id_producto: {
             type: DataTypes.STRING,
             allowNull: false,
-            onUpdate: 'CASCADE'
+            references: {
+                model: 'productos',
+                key: 'id',
+                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+            }
         },
         cantidad_producto: {
             type: DataTypes.INTEGER,
