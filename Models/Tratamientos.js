@@ -44,7 +44,7 @@ module.exports = function (sequelize) {
         }
     }, {
         indexes: [{
-            unique: true,
+            unique: false,
             fields: ['nombre']
         }],
         modelName: 'tratamientos',

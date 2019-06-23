@@ -1,7 +1,7 @@
 const DataTypes = require('sequelize/lib/data-types');
 
 module.exports = function(sequelize){
-    const Inventarios = sequelize.define('Inventarios',
+    const Inventarios = sequelize.define('inventarios',
     {
         id:{
             type : DataTypes.BIGINT,
@@ -35,12 +35,17 @@ module.exports = function(sequelize){
     },{
         indexes: [{
             unique: false,
-            fields: ['nombre', 'fecha_creacion']
+            fields: ['fecha_creacion']
         },
         {
             unique: false,
-            fields: ['nombre', 'fecha_actualizacion']
-        }
+            fields: ['fecha_actualizacion']
+        },
+        {
+            unique: false,
+            fields: ['nombre']
+        },
+        
     ],
         timestamps: false
     });
