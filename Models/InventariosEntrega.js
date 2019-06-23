@@ -2,28 +2,37 @@ const DataTypes = require('sequelize/lib/data-types');
 
 //TODO: Ver como crear una clave primaria compuesta
 
-module.exports = function(sequelize){
-    const InventariosEntrega = sequelize.define('InventariosEntrega',
-    {
-        IdInventario:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const InventariosEntrega = sequelize.define('inventarios_entrega', {
+        id_inventario: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false ,
+            allowNull: false,
             references: {
                 model: 'Inventarios',
                 key: 'Id'
-            }          
+            }
         },
-        PersonaEntrega: {
+        persona_entrega: {
             type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
             allowNull: false
         },
-        PersonaRecibe: {
+        persona_recibe: {
             type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
             allowNull: false
         }
-    },{
+    }, {
+        indexes: [{
+                unique: false,
+                fields: ['persona_entrega']
+            },
+            {
+                unique: false,
+                fields: ['persona_recibe']
+            }
+        ],
+        modelName: 'inventarios_entrega',
         timestamps: false
     });
     return InventariosEntrega;

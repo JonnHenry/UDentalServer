@@ -1,20 +1,21 @@
 const DataTypes = require('sequelize/lib/data-types');
 
-module.exports = function(sequelize){
-    const Inventarios = sequelize.define('inventarios',
-    {
-        id:{
-            type : DataTypes.BIGINT,
+module.exports = function (sequelize) {
+    const Inventarios = sequelize.define('inventarios', {
+        id: {
+            type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false         
+            allowNull: false
         },
         nombre: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                notEmpty: { msg: "El campo no puede ser vacio" }
-            } 
+                notEmpty: {
+                    msg: "El campo no puede ser vacio"
+                }
+            }
         },
         descripcion: {
             type: DataTypes.STRING,
@@ -32,20 +33,21 @@ module.exports = function(sequelize){
             allowNull: false,
             onUpdate: true
         }
-    },{
+    }, {
         indexes: [{
-            unique: false,
-            fields: ['fecha_creacion']
-        },
-        {
-            unique: false,
-            fields: ['fecha_actualizacion']
-        },
-        {
-            unique: false,
-            fields: ['nombre']
-        }        
-    ],
+                unique: false,
+                fields: ['fecha_creacion']
+            },
+            {
+                unique: false,
+                fields: ['fecha_actualizacion']
+            },
+            {
+                unique: false,
+                fields: ['nombre']
+            }
+        ],
+        modelName: 'inventarios',
         timestamps: false
     });
     return Inventarios;

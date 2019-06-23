@@ -30,7 +30,7 @@ module.exports = function(sequelize){
         }
     },{
         indexes: [{
-            unique: true,
+            unique: false,
             fields: ['estado']
         }],
         timestamps: false,
