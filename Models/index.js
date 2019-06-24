@@ -1,4 +1,3 @@
-//TODO: Hacer la tabla de Tratamientos productos
 
 module.exports = function (sequelize) {
     //Importamos todos los modelos, hacemos las relaciones entre ellos y los devolvemos los datos
