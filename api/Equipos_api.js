@@ -1,5 +1,5 @@
 /*TODO: -Obtener los productos por nombre y por fecha de creación
-*/
+ */
 
 var express = require('express');
 var router = express.Router();
@@ -14,70 +14,82 @@ function initEquipos(instanciaBD) {
     var conexion = instanciaBD.conexionBD;
 
     //  Obtener todos los equipos
+
     router.get('/all', (req, res) => {
-        try {
-            conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;", {
-                raw: true
-            }).spread(function (results, metadata) {
-                res.json({
-                    "error": false,
-                    "data": results
-                });
+        return conexion.transaction(t => {
+                return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;", {
+                        transaction: t,
+                        limit: 1,
+                        lock: true,
+                        raw: true
+                    })
+                    .then(([results, metadata]) => {
+                        res.status(200);
+                        return ({
+                            "error": false,
+                            "data": results
+                        });
+                    })
+                    .catch(err => {
+                        res.status(500);
+                        return ({
+                            message: 'Error, vuelva a intentarlo.',
+                            inserted: false
+                        })
+                    })
             })
-        } catch (error) {
-            res.json({
-                "error": true,
-                "data": []
+            .then(result => {
+                res.json(result)
             });
-        }
     });
 
     //Crear un nuevo equipo
     router.post('/new', (req, res) => {
         var parametros = req.body;
-        try {
-            Productos.findOrCreate({
-                where: {
-                    id: parametros.id
-                },
-                defaults: {
-                    nombre: req.body.marca,
-                    descripcion: req.body.observacion,
-                    precio_unitario: req.body.estado
-                }
-            }).spread((result, created) => {
-                if (created) {
-                    insertEquipos(parametros, Equipos).then(result => {
-                        if (result) {
-                            res.status(200);
-                            res.json({
-                                'message': 'El Equipo fue ingresado, de manera correcta',
-                                'inserted': true
-                            })
-                        } else {
-                            res.status(500);
-                            res.json({
-                                'message': 'El equipo no fue ingresado',
-                                'inserted': false
-                            })
+        return conexion.transaction(t => {
+                return Productos.findOrCreate({
+                    where: {
+                        id: parametros.id
+                    },
+                    defaults: {
+                        nombre: req.body.marca,
+                        descripcion: req.body.observacion,
+                        precio_unitario: req.body.estado
+                    }
+                }, {
+                    transaction: t,
+                    limit: 1,
+                    lock: true
+                }).then(([result, created]) => {
+                    if (created) {
+                        insertEquipos(parametros, Equipos).then(result => {
+                            if (result) {
+                                res.status(200);
+                                return ({
+                                    'message': 'El Equipo fue ingresado, de manera correcta',
+                                    'inserted': true
+                                })
+                            } else {
+                                res.status(200);
+                                res.json({
+                                    'message': 'El equipo no fue ingresado',
+                                    'inserted': false
+                                })
 
-                        }
-                    })
-                } else {
-                    res.status(200);
-                    res.json({
-                        'message': 'El Equipo no fue ingresado, ya se encuentra registrado',
-                        'inserted': false
-                    })
-                }
+                            }
+                        })
+                    } else {
+                        res.status(200);
+                        return ({
+                            'message': 'El Equipo no fue ingresado, ya se encuentra registrado',
+                            'inserted': false
+                        })
+                    }
+                })
             })
-        } catch (error) {
-            res.status(500);
-            res.json({
-                'message': 'El Equipo no fue ingresado, ya se encuentra registrado',
-                'inserted': false
-            })
-        }
+            .then(result => {
+                res.json(result);
+            });
     });
 
 
@@ -93,90 +105,114 @@ function initEquipos(instanciaBD) {
     */
     router.put('/update/:id', (req, res) => {
         var equipos = ['marca', 'observacion', 'estado', 'stock'];
-        if (req.body.colUpdate in equipos) {
-            Equipos.update(req.body.dataUpdate, {
-                    where: {
-                        id_producto: req.params.id
-                    }
-                }).then(() => {
-                    res.status(200);
-                    res.json({
-                        'message': 'El Equipo fue actualizado, de manera correcta',
-                        'updated': true
-                    })
-                })
-                .catch(() => {
-                    res.status(500);
-                    res.json({
-                        'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                        'updated': false
-                    })
-                });
-        } else {
-            Productos.update(req.body.dataUpdate, {
-                    where: {
-                        id: req.params.id
-                    }
-                }).then(() => {
-                    res.status(200);
-                    res.json({
-                        'message': 'El Equipo fue actualizado, de manera correcta',
-                        'updated': true
-                    })
-                })
-                .catch(() => {
-                    res.status(500);
-                    res.json({
-                        'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                        'updated': false
-                    })
-                });
-        }
+        return conexion.transaction(t => {
+                if (req.body.colUpdate in equipos) {
+                    return Equipos.update(req.body.dataUpdate, {
+                            where: {
+                                id_producto: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            res.status(200);
+                            return ({
+                                'message': 'El Equipo fue actualizado, de manera correcta',
+                                'updated': true
+                            })
+                        })
+                        .catch(() => {
+                            res.status(500);
+                            return ({
+                                'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
+                                'updated': false
+                            })
+                        });
+                } else {
+                    return Productos.update(req.body.dataUpdate, {
+                            where: {
+                                id: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            res.status(200);
+                            return ({
+                                'message': 'El Equipo fue actualizado, de manera correcta',
+                                'updated': true
+                            })
+                        })
+                        .catch(() => {
+                            res.status(500);
+                            return ({
+                                'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
+                                'updated': false
+                            })
+                        });
+                }
+            })
+            .then(result => {
+                res.json(result)
+            });
     });
 
     router.put('/update/all/:id', (req, res) => {
-
-        Equipos.update({
-                marca: req.body.marca,
-                observacion: req.body.observacion,
-                estado: req.body.estado,
-                stock: req.body.stock
-            }, {
-                where: {
-                    id_producto: req.params.id
-                }
-            }).then(() => {
-                Productos.update({
-                        nombre: req.body.nombre,
-                        descripcion: req.body.descripcion,
-                        precio_unitario: req.body.precio_unitario
+            return conexion.transaction(t => {
+                return Equipos.update({
+                        marca: req.body.marca,
+                        observacion: req.body.observacion,
+                        estado: req.body.estado,
+                        stock: req.body.stock
                     }, {
                         where: {
-                            id: req.params.id
-                        }
+                            id_producto: req.params.id
+                        },
+                        transaction: t,
+                        limit: 1,
+                        lock: true
                     }).then(() => {
-                        res.status(200);
-                        res.json({
-                            'message': 'El Equipo fue actualizado, de manera correcta',
-                            'updated': true
-                        })
+                        return Productos.update({
+                                nombre: req.body.nombre,
+                                descripcion: req.body.descripcion,
+                                precio_unitario: req.body.precio_unitario
+                            }, {
+                                where: {
+                                    id: req.params.id
+                                },
+                                transaction: t,
+                                limit: 1,
+                                lock: true
+                            }).then(() => {
+                                res.status(200);
+                                return ({
+                                    'message': 'El Equipo fue actualizado, de manera correcta',
+                                    'updated': true
+                                })
+                            })
+                            .catch(() => {
+                                res.status(500);
+                                return ({
+                                    'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
+                                    'updated': false
+                                })
+                            });
                     })
-                    .catch(()=> {
+                    .catch(() => {
                         res.status(500);
-                        res.json({
+                        return ({
                             'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
                             'updated': false
                         })
                     });
-            })
-            .catch(() => {
-                res.status(500);
-                res.json({
-                    'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                    'updated': false
-                })
+
             });
-    });
+
+
+        })
+        .then(result => {
+            res.json(result)
+        });
     return router
 }
 

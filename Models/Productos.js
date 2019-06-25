@@ -26,15 +26,14 @@ module.exports = function (sequelize) {
             onUpdate: 'CASCADE'
         },
         fecha_creacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
             allowNull: false
         },
         fecha_actualizacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false,
-            onUpdate: true
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     }, {
         indexes: [{
@@ -50,6 +49,8 @@ module.exports = function (sequelize) {
                 fields: ['nombre']
             }
         ],
+        updatedAt: 'fecha_actualizacion',
+        createdAt: 'fecha_creacion',
         modelName: 'productos',
         timestamps: false
     });

@@ -23,15 +23,14 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         fecha_creacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
             allowNull: false
         },
         fecha_actualizacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false,
-            onUpdate: true
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     }, {
         indexes: [{
@@ -47,6 +46,8 @@ module.exports = function (sequelize) {
                 fields: ['nombre']
             }
         ],
+        updatedAt: 'updated_at',
+        createdAt: 'created_at',
         modelName: 'inventarios',
         timestamps: false
     });

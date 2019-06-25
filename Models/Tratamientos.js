@@ -32,21 +32,22 @@ module.exports = function (sequelize) {
             defaultValue: 0
         },
         fecha_creacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
             allowNull: false
         },
         fecha_actualizacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false,
-            onUpdate: true
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     }, {
         indexes: [{
             unique: false,
             fields: ['nombre']
         }],
+        updatedAt: 'fecha_actualizacion',
+        createdAt: 'fecha_creacion',
         modelName: 'tratamientos',
         timestamps: false
     });
