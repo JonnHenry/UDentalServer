@@ -8,8 +8,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
-
-app.listen(port, () => {
-  console.log('Escuchando en el puerto' + port)
+appExpress.listen(port, () => {
+  console.log('Escuchando en el puerto: ' + port)
 });
+
 module.exports.app = app;
