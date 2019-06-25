@@ -2,7 +2,7 @@ const DataTypes = require('sequelize/lib/data-types');
 
 
 module.exports = function (sequelize) {
-    const InventariosEntrega = sequelize.define('inventarios_entrega', {
+    const InventariosEntrega = sequelize.define('inventario_entregas', {
         id_inventario: {
             type: DataTypes.BIGINT,
             primaryKey: true,
@@ -31,7 +31,7 @@ module.exports = function (sequelize) {
                 fields: ['persona_recibe']
             }
         ],
-        modelName: 'inventarios_entrega',
+        modelName: 'inventario_entregas',
         timestamps: false
     });
     return InventariosEntrega;

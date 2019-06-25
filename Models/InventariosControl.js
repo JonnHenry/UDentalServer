@@ -1,7 +1,7 @@
 const DataTypes = require('sequelize/lib/data-types');
 
 module.exports = function(sequelize){
-    const InventariosControl = sequelize.define('inventarios_control',
+    const InventariosControl = sequelize.define('inventario_controles',
     {
         id_inventario:{
             type : DataTypes.BIGINT,
@@ -22,7 +22,7 @@ module.exports = function(sequelize){
             unique: false,
             fields: ['persona_realiza']
         }],
-        modelName: 'inventarios_control',
+        modelName: 'inventario_controles',
         timestamps: false
     });
     return InventariosControl;
