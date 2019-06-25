@@ -43,6 +43,45 @@ function initEquipos(instanciaBD) {
             });
     });
 
+    /*
+        El objeto a enviar debe de ser de esta manera
+        {
+            colAndValueSearch: ['col=value'],---> tipo string
+        }
+    */
+
+    //Obtener los equipos con 
+    router.get('/find', (req, res) => {
+        createQuery(req.body).then(query => {
+            return conexion.transaction(t => {
+                    return conexion.query(query, {
+                            transaction: t,
+                            limit: 1,
+                            lock: true,
+                            raw: true
+                        })
+                        .then(([results, metadata]) => {
+                            res.status(200);
+                            return ({
+                                "error": false,
+                                "data": results
+                            });
+                        })
+                        .catch(err => {
+                            res.status(500);
+                            return ({
+                                message: 'Error, vuelva a intentarlo.',
+                                inserted: false
+                            })
+                        })
+                })
+                .then(result => {
+                    res.json(result)
+                });
+        })
+    });
+
+
     //Crear un nuevo equipo
     router.post('/new', (req, res) => {
         var parametros = req.body;
@@ -230,4 +269,18 @@ function insertEquipos(parametros, Equipo) {
             reject(false);
         })
     });
+}
+
+function createQuery(parametros) {
+    return new Promise((resolve, reject) => {
+        if (parametros.length != 0) {
+            query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto WHERE '
+            parametros.forEach(element => {
+                query = query + element + ' AND '
+            });
+            console.log(query);
+        }
+        resolve(query);
+        reject(query);
+    })
 }
