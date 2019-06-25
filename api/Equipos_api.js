@@ -1,17 +1,13 @@
-/*TODO: Todo lo referente a equipos
--Ingresar los productos
--Extraer los productos
--Obtener los productos por nombre y por fecha de creación
+/*TODO: -Obtener los productos por nombre y por fecha de creación
 */
-//ruta del enrutador para la api productos
+
 var express = require('express');
 var router = express.Router();
-
 /*
     Entra un objeto JSON con productos y equipos
 */
 
-//Ruta del enrutador /equipo
+//Ruta del enrutador actual /equipo
 function initEquipos(instanciaBD) {
     var Productos = instanciaBD.Productos;
     var Equipos = instanciaBD.Equipos;
