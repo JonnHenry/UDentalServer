@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
-appExpress.listen(port, () => {
+app.listen(port, () => {
   console.log('Escuchando en el puerto: ' + port)
 });
 

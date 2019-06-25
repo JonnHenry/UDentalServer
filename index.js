@@ -1,13 +1,16 @@
 const app = require('./app').app;
-var apiUse = require('./api/index');
+var apiUse = require('./api/index').initRouter;
 const conexion = require('./db/index').conexion
 conexion('UCuencaDental', 'admin', '123456789', 'localhost').then(result => {
-  apiUse.initRouter(result, app).then(conect => {
+  apiUse(result, app).then(conect => {
     if (conect) {
       console.log('La conexión es correcta');
     } else {
-      console.log('Error');
+      console.log('Error actual');
     }
+  })
+  .catch((error)=>{
+    console.log(error);
   })
 });
 // conexionBD Me trae la conexión y los modelos de la base de datos

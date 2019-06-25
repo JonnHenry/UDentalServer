@@ -197,61 +197,59 @@ function initEquipos(instanciaBD) {
     });
 
     router.put('/update/all/:id', (req, res) => {
-            return conexion.transaction(t => {
-                return Equipos.update({
-                        marca: req.body.marca,
-                        observacion: req.body.observacion,
-                        estado: req.body.estado,
-                        stock: req.body.stock
-                    }, {
-                        where: {
-                            id_producto: req.params.id
-                        },
-                        transaction: t,
-                        limit: 1,
-                        lock: true
-                    }).then(() => {
-                        return Productos.update({
-                                nombre: req.body.nombre,
-                                descripcion: req.body.descripcion,
-                                precio_unitario: req.body.precio_unitario
-                            }, {
-                                where: {
-                                    id: req.params.id
-                                },
-                                transaction: t,
-                                limit: 1,
-                                lock: true
-                            }).then(() => {
-                                res.status(200);
-                                return ({
-                                    'message': 'El Equipo fue actualizado, de manera correcta',
-                                    'updated': true
-                                })
+        return conexion.transaction(t => {
+            return Equipos.update({
+                    marca: req.body.marca,
+                    observacion: req.body.observacion,
+                    estado: req.body.estado,
+                    stock: req.body.stock
+                }, {
+                    where: {
+                        id_producto: req.params.id
+                    },
+                    transaction: t,
+                    limit: 1,
+                    lock: true
+                }).then(() => {
+                    return Productos.update({
+                            nombre: req.body.nombre,
+                            descripcion: req.body.descripcion,
+                            precio_unitario: req.body.precio_unitario
+                        }, {
+                            where: {
+                                id: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            res.status(200);
+                            return ({
+                                'message': 'El Equipo fue actualizado, de manera correcta',
+                                'updated': true
                             })
-                            .catch(() => {
-                                res.status(500);
-                                return ({
-                                    'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                                    'updated': false
-                                })
-                            });
-                    })
-                    .catch(() => {
-                        res.status(500);
-                        return ({
-                            'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                            'updated': false
                         })
-                    });
+                        .catch(() => {
+                            res.status(500);
+                            return ({
+                                'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
+                                'updated': false
+                            })
+                        });
+                })
+                .catch(() => {
+                    res.status(500);
+                    return ({
+                        'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
+                        'updated': false
+                    })
+                });
 
-            });
-
-
-        })
-        .then(result => {
+        }).then(result => {
             res.json(result)
         });
+    })
+
     return router
 }
 
@@ -284,3 +282,6 @@ function createQuery(parametros) {
         reject(query);
     })
 }
+
+
+module.exports.initEquipos = initEquipos;
