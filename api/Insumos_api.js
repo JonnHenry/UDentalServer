@@ -1,8 +1,5 @@
-/*TODO: Todo lo referente a insumos
--Ingresar los insumos
--Extraer los insumos
--Obtener los insumos por nombre y por fecha de creación
-*/
+/*TODO: Pendiente como eliminar un insumo
+ */
 
 var express = require('express');
 var router = express.Router();
@@ -94,7 +91,9 @@ function initInsumos(instanciaBD) {
                         id: parametros.id
                     },
                     defaults: {
-                        fecha_caducidad: parametros.fecha_caducidad
+                        nombre: req.body.marca,
+                        descripcion: req.body.observacion,
+                        precio_unitario: req.body.estado
                     }
                 }, {
                     transaction: t,
@@ -201,7 +200,7 @@ function initInsumos(instanciaBD) {
     router.put('/update/all/:id', (req, res) => {
         return conexion.transaction(t => {
             return Insumos.update({
-                fecha_caducidad: fecha_caducidad
+                    fecha_caducidad: req.body.fecha_caducidad
                 }, {
                     where: {
                         id_producto: req.params.id
@@ -275,7 +274,7 @@ function createQuery(parametros) {
             console.log(query);
         }
         resolve(query);
-        reject('SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto');
+        reject(query);
     })
 }
 
