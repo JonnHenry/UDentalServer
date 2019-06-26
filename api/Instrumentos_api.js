@@ -282,5 +282,4 @@ function createQuery(parametros) {
     })
 }
 
-
 module.exports.initInstrumentos = initInstrumentos;

@@ -1,5 +1,6 @@
 var equiposApi = require('./Equipos_api').initEquipos;
-var insumosApi = require('./Insumos_api').initInsumos
+var insumosApi = require('./Insumos_api').initInsumos;
+var instrumentosApi = require('./Instrumentos_api').initInstrumentos;
 
 /*
      conexionBD: conexionBD,
@@ -19,6 +20,11 @@ function inicialiceRouter(instanciaBD, app) {
                 Productos: instanciaBD.models.Productos,
                 Insumos: instanciaBD.models.Insumos
             }));
+            app.use('/instrumentos', instrumentosApi({
+                conexionBD: instanciaBD.conexionBD,
+                Productos: instanciaBD.models.Productos,
+                Instrumentos: instanciaBD.models.Instrumentos
+            }))
             resolve(true);
         } catch (error) {
             reject(error)
