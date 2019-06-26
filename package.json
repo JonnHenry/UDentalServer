@@ -4,13 +4,13 @@
   "description": "Servidor para la pagina del consultorio dental de la Universidad de Cuenca",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JonnHenry/UDentalServer.git"
   },
-  "author": "Jonnathan Campoberde, Miguel Macías",
+  "author": "Jonnathan Campoberde",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JonnHenry/UDentalServer/issues"
@@ -23,5 +23,8 @@
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.8.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }

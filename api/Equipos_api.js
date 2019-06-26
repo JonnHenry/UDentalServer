@@ -1,5 +1,6 @@
-/*TODO: -Obtener los productos por nombre y por fecha de creación
- */
+/*
+    TODO: -Eliminar un producto ver como hacer si con el campo o agregar otro
+*/
 
 var express = require('express');
 var router = express.Router();
