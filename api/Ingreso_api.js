@@ -169,7 +169,7 @@ function initIngreso(instanciaBD) {
         JSON a enviar 
         {
             data: [
-                {
+                { //Equipos
                     categoria: 1,
                     id: id,
                     nombre: req.body.marca,
@@ -188,8 +188,8 @@ function initIngreso(instanciaBD) {
                     precio_unitario: req.body.estado,
                     fecha_caducidad: fecha_caducidad
                 },
-                {
-                     categoria: 3,
+                { //Instrumentos
+                    categoria: 3,
                     id: id,
                     nombre: req.body.marca,
                     descripcion: req.body.observacion,
@@ -202,40 +202,60 @@ function initIngreso(instanciaBD) {
         }
     */
 
+    /*
+        delete miObjeto.propiedad2;
+        delete miObjeto['propiedad2'];
+        // ó,
+        var prop = "propiedad2";
+        delete miObjeto[prop];
+    */
+   //TODO: Ver como borrar una propieda para ponerla en un objeto JSON y enviarlo
+
     router.put('/update', (req, res) => {
-        return conexion.transaction(t => {
-                if (req.body.colUpdate in equipos) {
-                    return Equipos.update(req.body.dataUpdate, {
-                            where: {
-                                id_producto: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
+        var errorArray = [];
+        var idFails = [];
+        new Promise((resolve, reject) => {
+                req.body.data.forEach(element => {
+                    return conexion.transaction(t => {
+                        if (element.categoria = 1){
+                            element.categoria = 'Equipo';
                             
-                        })
-                        .catch(() => {
-                            
-                        });
+
+                        }else if (element.categoria = 2){
+                            element.categoria = 'Insumo';
+
+                        }else if (element.categoria = 3){
+                            element.categoria = 'Instrumento';
+
+                        }
+                        
+                    });
+                });
+                resolve(false);
+                reject(false);
+            })
+            
+            .then((resultOp) => {
+                if (resultOp) {
+                    res.json({
+                        'message': 'Todos los productos se han ingresado con exito',
+                        'insertedAll': true,
+                        'idFails': []
+                    });
                 } else {
-                    return Productos.update(req.body.dataUpdate, {
-                            where: {
-                                id: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            
-                        })
-                        .catch(() => {
-                            
-                        });
+                    res.json({
+                        'message': errorArray,
+                        'insertedAll': false,
+                        'idFails': idFails
+                    });
                 }
             })
-            .then(result => {
-                res.json(result)
+            .catch(() => {
+                res.json({
+                    'message': errorArray,
+                    'insertedAll': false,
+                    'idFails': idFails
+                });
             });
     });
 
