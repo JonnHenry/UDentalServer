@@ -8,7 +8,7 @@ function initIngreso(instanciaBD) {
     var Instrumentos = instanciaBD.models.Instrumentos;
 
     /*
-        Como llegan el body
+        Como llegan el body con req.body
         {
             Para cada categoria debe ser asi:
                 1=Equipo,
@@ -64,7 +64,7 @@ function initIngreso(instanciaBD) {
                                             nombre: element.marca,
                                             descripcion: element.observacion,
                                             precio_unitario: element.estado,
-                                            categoria: categorias[element.categoria + 1]
+                                            categoria: categorias[element.categoria - 1]
                                         }
                                     }, {
                                         transaction: t
