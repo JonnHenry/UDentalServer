@@ -23,7 +23,7 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         estado: {
-            type: DataTypes.ENUM('Obsoleto', 'Buen Estado', 'Reparación'),
+            type: DataTypes.ENUM('Dañado', 'Buen Estado', 'Reparación'),
             allowNull: false,
             defaultValue: 'Buen Estado'
         },

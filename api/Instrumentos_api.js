@@ -82,54 +82,7 @@ function initInstrumentos(instanciaBD) {
     });
 
 
-    //Crear un nuevo Insumo
-    router.post('/new', (req, res) => {
-        var parametros = req.body;
-        return conexion.transaction(t => {
-                return Productos.findOrCreate({
-                    where: {
-                        id: parametros.id
-                    },
-                    defaults: {
-                        nombre: req.body.marca,
-                        descripcion: req.body.observacion,
-                        precio_unitario: req.body.estado
-                    }
-                }, {
-                    transaction: t,
-                    limit: 1,
-                    lock: true
-                }).then(([result, created]) => {
-                    if (created) {
-                        insertInstrumentos(parametros, Instrumentos).then(result => {
-                            if (result) {
-                                res.status(200);
-                                return ({
-                                    'message': 'El Instrumento fue ingresado, de manera correcta',
-                                    'inserted': true
-                                })
-                            } else {
-                                res.status(200);
-                                res.json({
-                                    'message': 'El Instrumento no fue ingresado',
-                                    'inserted': false
-                                })
-
-                            }
-                        })
-                    } else {
-                        res.status(200);
-                        return ({
-                            'message': 'El Instrumento no fue ingresado, ya se encuentra registrado',
-                            'inserted': false
-                        })
-                    }
-                })
-            })
-            .then(result => {
-                res.json(result);
-            });
-    });
+    
 
 
     /*
@@ -142,131 +95,12 @@ function initInstrumentos(instanciaBD) {
             }
         } 
     */
-    router.put('/update/:id', (req, res) => {
-        var instrumentos = ['observacion', 'estado', 'stock'];
-        return conexion.transaction(t => {
-                if (req.body.colUpdate in instrumentos) {
-                    return Instrumentos.update(req.body.dataUpdate, {
-                            where: {
-                                id_producto: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            res.status(200);
-                            return ({
-                                'message': 'El Instrumento fue actualizado, de manera correcta',
-                                'updated': true
-                            })
-                        })
-                        .catch(() => {
-                            res.status(500);
-                            return ({
-                                'message': 'El Instrumento no fue actualizado, vuelva a intentarlo',
-                                'updated': false
-                            })
-                        });
-                } else {
-                    return Productos.update(req.body.dataUpdate, {
-                            where: {
-                                id: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            res.status(200);
-                            return ({
-                                'message': 'El Instrumento fue actualizado, de manera correcta',
-                                'updated': true
-                            })
-                        })
-                        .catch(() => {
-                            res.status(500);
-                            return ({
-                                'message': 'El Instrumento no fue actualizado, vuelva a intentarlo',
-                                'updated': false
-                            })
-                        });
-                }
-            })
-            .then(result => {
-                res.json(result)
-            });
-    });
-
-    //Actualiza todos los datos de un insumo
-    router.put('/update/all/:id', (req, res) => {
-        return conexion.transaction(t => {
-            return Insumos.update({
-                observacion: req.body.observacion,
-                estado: req.body.estado,
-                stock: req.body.stock
-                }, {
-                    where: {
-                        id_producto: req.params.id,
-                    },
-                    transaction: t,
-                    limit: 1,
-                    lock: true
-                }).then(() => {
-                    return Productos.update({
-                            nombre: req.body.nombre,
-                            descripcion: req.body.descripcion,
-                            precio_unitario: req.body.precio_unitario
-                        }, {
-                            where: {
-                                id: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            res.status(200);
-                            return ({
-                                'message': 'El Instrumento fue actualizado, de manera correcta',
-                                'updated': true
-                            })
-                        })
-                        .catch(() => {
-                            res.status(500);
-                            return ({
-                                'message': 'El Instrumento no fue actualizado, vuelva a intentarlo',
-                                'updated': false
-                            })
-                        });
-                })
-                .catch(() => {
-                    res.status(500);
-                    return ({
-                        'message': 'El Insumo no fue actualizado, vuelva a intentarlo',
-                        'updated': false
-                    })
-                });
-
-        }).then(result => {
-            res.json(result)
-        });
-    })
+    
 
     return router
 }
 
-function insertInstrumentos(parametros, Instrumentos) {
-    return new Promise((resolve, reject) => {
-        Instrumentos.create({
-            id_producto: parametros.id,
-            observacion: parametros.observacion,
-            estado: parametros.estado,
-            stock: parametros.stock
-        }).then(
-            resolve(true)
-        ).catch((error) => {
-            reject(false);
-        })
-    });
-}
+
 
 function createQuery(parametros) {
     return new Promise((resolve, reject) => {

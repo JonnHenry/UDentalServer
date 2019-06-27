@@ -25,6 +25,11 @@ module.exports = function (sequelize) {
             defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
+        categoria:{
+            type: DataTypes.STRING,
+            allowNull: false,
+            onUpdate: 'CASCADE'
+        },
         fecha_creacion: {
             type: DataTypes.DATEONLY,
             defaultValue: DataTypes.NOW,

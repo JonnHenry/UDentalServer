@@ -84,54 +84,7 @@ function initEquipos(instanciaBD) {
 
 
     //Crear un nuevo equipo
-    router.post('/new', (req, res) => {
-        var parametros = req.body;
-        return conexion.transaction(t => {
-                return Productos.findOrCreate({
-                    where: {
-                        id: parametros.id
-                    },
-                    defaults: {
-                        nombre: req.body.marca,
-                        descripcion: req.body.observacion,
-                        precio_unitario: req.body.estado
-                    }
-                }, {
-                    transaction: t,
-                    limit: 1,
-                    lock: true
-                }).then(([result, created]) => {
-                    if (created) {
-                        insertEquipos(parametros, Equipos).then(result => {
-                            if (result) {
-                                res.status(200);
-                                return ({
-                                    'message': 'El Equipo fue ingresado, de manera correcta',
-                                    'inserted': true
-                                })
-                            } else {
-                                res.status(200);
-                                res.json({
-                                    'message': 'El equipo no fue ingresado',
-                                    'inserted': false
-                                })
-
-                            }
-                        })
-                    } else {
-                        res.status(200);
-                        return ({
-                            'message': 'El Equipo no fue ingresado, ya se encuentra registrado',
-                            'inserted': false
-                        })
-                    }
-                })
-            })
-            .then(result => {
-                res.json(result);
-            });
-    });
-
+    
 
     /*
         Actualizar un equipo solo un valor
@@ -143,59 +96,7 @@ function initEquipos(instanciaBD) {
             }
         } 
     */
-    router.put('/update/:id', (req, res) => {
-        var equipos = ['marca', 'observacion', 'estado', 'stock'];
-        return conexion.transaction(t => {
-                if (req.body.colUpdate in equipos) {
-                    return Equipos.update(req.body.dataUpdate, {
-                            where: {
-                                id_producto: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            res.status(200);
-                            return ({
-                                'message': 'El Equipo fue actualizado, de manera correcta',
-                                'updated': true
-                            })
-                        })
-                        .catch(() => {
-                            res.status(500);
-                            return ({
-                                'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                                'updated': false
-                            })
-                        });
-                } else {
-                    return Productos.update(req.body.dataUpdate, {
-                            where: {
-                                id: req.params.id
-                            },
-                            transaction: t,
-                            limit: 1,
-                            lock: true
-                        }).then(() => {
-                            res.status(200);
-                            return ({
-                                'message': 'El Equipo fue actualizado, de manera correcta',
-                                'updated': true
-                            })
-                        })
-                        .catch(() => {
-                            res.status(500);
-                            return ({
-                                'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                                'updated': false
-                            })
-                        });
-                }
-            })
-            .then(result => {
-                res.json(result)
-            });
-    });
+    
 
     router.put('/update/all/:id', (req, res) => {
         return conexion.transaction(t => {
@@ -254,21 +155,7 @@ function initEquipos(instanciaBD) {
     return router
 }
 
-function insertEquipos(parametros, Equipo) {
-    return new Promise((resolve, reject) => {
-        Equipo.create({
-            id_producto: parametros.id,
-            marca: parametros.marca,
-            observacion: parametros.observacion,
-            estado: parametros.estado,
-            stock: parametros.stock
-        }).then(
-            resolve(true)
-        ).catch((error) => {
-            reject(false);
-        })
-    });
-}
+
 
 function createQuery(parametros) {
     return new Promise((resolve, reject) => {
