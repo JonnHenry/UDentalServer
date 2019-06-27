@@ -51,6 +51,7 @@ function initIngreso(instanciaBD) {
         var newArray = req.body.data;
         var errorArray = [];
         var idFails = [];
+        var categorias = ['Equipo', 'Insumo', 'Instrumento'];
         try {
             return new Promise((resolve, reject) => {
                     newArray.forEach(element => {
@@ -62,7 +63,8 @@ function initIngreso(instanciaBD) {
                                         defaults: {
                                             nombre: element.marca,
                                             descripcion: element.observacion,
-                                            precio_unitario: element.estado
+                                            precio_unitario: element.estado,
+                                            categoria: categorias[element.categoria + 1]
                                         }
                                     }, {
                                         transaction: t
@@ -127,20 +129,29 @@ function initIngreso(instanciaBD) {
                                 console.log('Transacción realizada de manera correcta');
                             })
                     });
-
+                    resolve(true);
+                    reject(false)
                 })
-                .then(() => {
-                    res.json({
-                        'message': 'Todos los productos se han ingresado con exito',
-                        'insertedAll': true,
-                        'idFails': []
-                    });
+                .then((resultOp) => {
+                    if (resultOp) {
+                        res.json({
+                            'message': 'Todos los productos se han ingresado con exito',
+                            'insertedAll': true,
+                            'idFails': []
+                        });
+                    } else {
+                        res.json({
+                            'message': errorArray,
+                            'insertedAll': false,
+                            'idFails': idFails
+                        });
+                    }
                 })
                 .catch(() => {
                     res.json({
                         'message': errorArray,
                         'insertedAll': false,
-                        'idFails': idFails 
+                        'idFails': idFails
                     });
                 })
 
@@ -154,7 +165,7 @@ function initIngreso(instanciaBD) {
     });
 
 
-    
+
 
 
 
