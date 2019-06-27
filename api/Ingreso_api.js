@@ -209,7 +209,7 @@ function initIngreso(instanciaBD) {
         var prop = "propiedad2";
         delete miObjeto[prop];
     */
-   //TODO: Ver como borrar una propieda para ponerla en un objeto JSON y enviarlo
+    //TODO: Ver como borrar una propieda para ponerla en un objeto JSON y enviarlo
 
     router.put('/update', (req, res) => {
         var errorArray = [];
@@ -217,24 +217,101 @@ function initIngreso(instanciaBD) {
         new Promise((resolve, reject) => {
                 req.body.data.forEach(element => {
                     return conexion.transaction(t => {
-                        if (element.categoria = 1){
-                            element.categoria = 'Equipo';
-                            
-
-                        }else if (element.categoria = 2){
-                            element.categoria = 'Insumo';
-
-                        }else if (element.categoria = 3){
-                            element.categoria = 'Instrumento';
-
-                        }
-                        
-                    });
+                            updateProducto(element, Productos, t).then(result => {
+                                    if (result) {
+                                        if (element.categoria = 1) {
+                                            var id = element.id;
+                                            delete element.id
+                                            return Equipos.update(element, {
+                                                    where: {
+                                                        id_producto: id
+                                                    },
+                                                    transaction: t,
+                                                    limit: 1,
+                                                    lock: true
+                                                }).then(() => {
+                                                    res.status(200);
+                                                })
+                                                .catch(() => {
+                                                    res.status(200);
+                                                    errorArray.push({
+                                                        'message': 'El Equipo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                                        'updated': false
+                                                    })
+                                                    idFails.push(id);
+                                                });
+                                        } else if (element.categoria = 2) {
+                                            var id = element.id;
+                                            delete element.id
+                                            return Insumos.update(element, {
+                                                    where: {
+                                                        id_producto: id
+                                                    },
+                                                    transaction: t,
+                                                    limit: 1,
+                                                    lock: true
+                                                }).then(() => {
+                                                    res.status(200);
+                                                })
+                                                .catch(() => {
+                                                    res.status(500);
+                                                    errorArray.push({
+                                                        'message': 'El Instrumento con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                                        'updated': false
+                                                    })
+                                                    idFails.push(id);
+                                                });
+                                        } else if (element.categoria = 3) {
+                                            var id = element.id;
+                                            delete element.id
+                                            return Instrumentos.update(req.body.dataUpdate, {
+                                                    where: {
+                                                        id_producto: id
+                                                    },
+                                                    transaction: t,
+                                                    limit: 1,
+                                                    lock: true
+                                                }).then(() => {
+                                                    res.status(200);
+                                                })
+                                                .catch(() => {
+                                                    res.status(200);
+                                                    errorArray.push({
+                                                        'message': 'El Insumo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                                        'updated': false
+                                                    })
+                                                    idFails.push(id);
+                                                });
+                                        }
+                                    } else {
+                                        errorArray.push({
+                                            'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                            'updated': false
+                                        });
+                                        idFails.push(element.id)
+                                    }
+                                })
+                                .catch(() => {
+                                    errorArray.push({
+                                        'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                        'updated': false
+                                    });
+                                })
+                        })
+                        .then(() => {
+                            console.log('Transacción realizada');
+                        })
+                        .catch(() => {
+                            errorArray.push({
+                                'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                'updated': false
+                            });
+                            idFails.push(element.id);
+                        })
                 });
-                resolve(false);
+                resolve(true);
                 reject(false);
             })
-            
             .then((resultOp) => {
                 if (resultOp) {
                     res.json({
@@ -258,13 +335,6 @@ function initIngreso(instanciaBD) {
                 });
             });
     });
-
-
-
-
-
-
-
     return router;
 }
 
@@ -319,4 +389,24 @@ function insertInstrumentos(parametros, Instrumentos, t) {
             reject(val);
         })
     });
+}
+
+function updateProducto(updateData, Productos, transaction) {
+    return new Promise((resolve, reject) => {
+        var categorias = ['Equipo', 'Insumo', 'Instrumento'];
+        updateData.categoria = categorias[updateData.categoria - 1];
+        Productos.update(updateData, {
+                where: {
+                    id: req.params.id
+                },
+                transaction: transaction,
+                limit: 1,
+                lock: true
+            }).then(() => {
+                resolve(true);
+            })
+            .catch(() => {
+                reject(false);
+            })
+    })
 }
