@@ -2,11 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 function initIngreso(instanciaBD) {
-    var Productos = instanciaBD.models.Productos;
-    var Insumos = instanciaBD.models.Insumos;
-    var Equipos = instanciaBD.models.Equipos;
-    var Instrumentos = instanciaBD.models.Instrumentos;
-
+    var Productos = instanciaBD.Productos;
+    var Insumos = instanciaBD.Insumos;
+    var Equipos = instanciaBD.Equipos;
+    var Instrumentos = instanciaBD.Instrumentos;
     /*
         Como llegan el body con req.body
         {
@@ -209,7 +208,6 @@ function initIngreso(instanciaBD) {
         var prop = "propiedad2";
         delete miObjeto[prop];
     */
-    //TODO: Ver como borrar una propieda para ponerla en un objeto JSON y enviarlo
 
     router.put('/update', (req, res) => {
         var errorArray = [];
@@ -338,7 +336,7 @@ function initIngreso(instanciaBD) {
     return router;
 }
 
-module.exports.initIngreso = initIngreso();
+module.exports.initIngreso = initIngreso
 
 function insertEquipos(parametros, Equipo, t) {
     return new Promise((resolve, reject) => {
