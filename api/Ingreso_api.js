@@ -35,6 +35,7 @@ function initIngreso(instanciaBD) {
                     fecha_caducidad: fecha_caducidad
                 },
                 {
+                     categoria: 3,
                     id: id,
                     nombre: req.body.marca,
                     descripcion: req.body.observacion,
@@ -162,6 +163,80 @@ function initIngreso(instanciaBD) {
                 'inserted': false
             })
         }
+    });
+
+    /*
+        JSON a enviar 
+        {
+            data: [
+                {
+                    categoria: 1,
+                    id: id,
+                    nombre: req.body.marca,
+                    descripcion: req.body.observacion,
+                    precio_unitario: req.body.estado,
+                    marca: parametros.marca,
+                    observacion: parametros.observacion,
+                    estado: parametros.estado,
+                    stock: parametros.stock
+                },
+                { //Para Insumos
+                    categoria: 2
+                    id: id,
+                    nombre: req.body.marca,
+                    descripcion: req.body.observacion,
+                    precio_unitario: req.body.estado,
+                    fecha_caducidad: fecha_caducidad
+                },
+                {
+                     categoria: 3,
+                    id: id,
+                    nombre: req.body.marca,
+                    descripcion: req.body.observacion,
+                    precio_unitario: req.body.estado,
+                    observacion: parametros.observacion,
+                    estado: parametros.estado,
+                    stock: parametros.stock
+                }
+            ]
+        }
+    */
+
+    router.put('/update', (req, res) => {
+        return conexion.transaction(t => {
+                if (req.body.colUpdate in equipos) {
+                    return Equipos.update(req.body.dataUpdate, {
+                            where: {
+                                id_producto: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            
+                        })
+                        .catch(() => {
+                            
+                        });
+                } else {
+                    return Productos.update(req.body.dataUpdate, {
+                            where: {
+                                id: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            
+                        })
+                        .catch(() => {
+                            
+                        });
+                }
+            })
+            .then(result => {
+                res.json(result)
+            });
     });
 
 

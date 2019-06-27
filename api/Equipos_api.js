@@ -86,16 +86,7 @@ function initEquipos(instanciaBD) {
     //Crear un nuevo equipo
     
 
-    /*
-        Actualizar un equipo solo un valor
-        Para modificar un valor se debe de enviar de la siguiente manera
-        {
-            colUpdate: 'nameCol', // El valor de la columna a actualizar
-            dataUpdate: {
-                colUpdate: 'valueUpdate'
-            }
-        } 
-    */
+    
     
 
     router.put('/update/all/:id', (req, res) => {
