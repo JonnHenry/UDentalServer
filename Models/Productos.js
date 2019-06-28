@@ -38,6 +38,7 @@ module.exports = function (sequelize) {
         fecha_actualizacion: {
             type: DataTypes.DATEONLY,
             defaultValue: DataTypes.NOW,
+            onUpdate: true,
             allowNull: false
         }
     }, {

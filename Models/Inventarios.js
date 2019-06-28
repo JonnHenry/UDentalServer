@@ -23,14 +23,10 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         fecha_creacion: {
-            type: DataTypes.DATEONLY,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
+            type: DataTypes.DATEONLY
         },
         fecha_actualizacion: {
-            type: DataTypes.DATEONLY,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
+            type: DataTypes.DATEONLY
         }
     }, {
         indexes: [{

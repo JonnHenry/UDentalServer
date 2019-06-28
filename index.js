@@ -1,7 +1,7 @@
 const app = require('./app').app;
 var apiUse = require('./api/index').initRouter;
 const conexion = require('./db/index').conexion
-conexion('UCuencaDental', 'admin', '123456789', 'localhost').then(result => {
+conexion('postgres://ebyivwns:DcVXBBQD5JT5gT9ZAIcc3wCzMYgxjjis@raja.db.elephantsql.com:5432/ebyivwns').then(result => {
   apiUse(result, app).then(conect => {
     if (conect) {
       console.log('La conexión es correcta');
