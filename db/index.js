@@ -34,7 +34,7 @@ var conexion = function (...parametros) {
         prueba(...parametros).then(conexionBD => {
             var models = require('../models')(conexionBD);
             conexionBD.sync({
-               force: true
+               //force: true
             }).then(() => {
                     console.log('Base de datos iniciada correctamente!')
                 },
