@@ -6,6 +6,7 @@ function initIngreso(instanciaBD) {
     var Insumos = instanciaBD.Insumos;
     var Equipos = instanciaBD.Equipos;
     var Instrumentos = instanciaBD.Instrumentos;
+    var conexion = instanciaBD.conexionBD;
     /*
         Como llegan el body con req.body
         {

@@ -6,7 +6,7 @@ conexion('UCuencaDental', 'admin', '123456789', 'localhost').then(result => {
     if (conect) {
       console.log('La conexión es correcta');
     } else {
-      console.log('Error actual');
+      console.log('La conexión no es correcta');
     }
   })
   .catch((error)=>{

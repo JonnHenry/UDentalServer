@@ -30,11 +30,12 @@ function inicialiceRouter(instanciaBD, app) {
                 Productos: instanciaBD.models.Productos,
                 Insumos: instanciaBD.models.Insumos,
                 Equipos: instanciaBD.models.Equipos,
-                Instrumentos: instanciaBD.models.Instrumentos
+                Instrumentos: instanciaBD.models.Instrumentos,
+                conexionBD: instanciaBD.conexionBD
             }))
             resolve(true);
         } catch (error) {
-            reject(error)
+            reject(false)
         }
     });
 }
