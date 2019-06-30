@@ -16,10 +16,14 @@ module.exports = function(sequelize){
         fecha_caducidad: {
             type: DataTypes.DATEONLY,
             allowNull: false
+        }, 
+        stock: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     },{
         indexes: [{
-            unique: true,
+            unique: false,
             fields: ['fecha_caducidad']
         }],
         timestamps: false,

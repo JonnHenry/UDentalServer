@@ -35,7 +35,7 @@ function inicialiceRouter(instanciaBD, app) {
             }))
             resolve(true);
         } catch (error) {
-            reject(false)
+            reject(error)
         }
     });
 }

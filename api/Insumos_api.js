@@ -17,21 +17,20 @@ function initInsumos(instanciaBD) {
 
     router.get('/all', (req, res) => {
         return conexion.transaction(t => {
-                return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto;", {
-                        transaction: t,
-                        limit: 1,
-                        lock: true,
-                        raw: true
+                return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto", {
+                        transaction: t
                     })
                     .then(([results, metadata]) => {
                         res.status(200);
+                        console.log(data);
+                        
                         return ({
                             "error": false,
                             "data": results
                         });
                     })
                     .catch(err => {
-                        res.status(500);
+                        res.status(500);                       
                         return ({
                             message: 'Error, vuelva a intentarlo.',
                             inserted: false

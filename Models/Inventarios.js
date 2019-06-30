@@ -35,10 +35,6 @@ module.exports = function (sequelize) {
             },
             {
                 unique: false,
-                fields: ['fecha_actualizacion']
-            },
-            {
-                unique: false,
                 fields: ['nombre']
             }
         ],

@@ -18,14 +18,12 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         estado: {
-            type: DataTypes.ENUM('Dañado', 'Buen Estado', 'Reparación'),
-            allowNull: false,
-            defaultValue: 'Buen Estado'
+            type: DataTypes.ENUM('Dañado', 'Buen estado', 'Reparación'),
+            allowNull: false
         },
         stock: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
+            allowNull: false
         }
     }, {
         indexes: [{

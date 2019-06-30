@@ -22,7 +22,6 @@ module.exports = function (sequelize) {
         precio_unitario: {
             type: DataTypes.FLOAT,
             allowNull: false,
-            defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
         categoria:{

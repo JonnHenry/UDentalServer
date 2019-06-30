@@ -17,19 +17,16 @@ module.exports = function (sequelize) {
         duracion_dias: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            onUpdate: 'CASCADE',
-            defaultValue: 1
+            onUpdate: 'CASCADE'
         },
         precio: {
             type: DataTypes.FLOAT,
             allowNull: false,
-            defaultValue: 0.0,
             onUpdate: 'CASCADE'
         },
         descripcion: {
             type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: 0
+            allowNull: false
         },
         fecha_creacion: {
             type: DataTypes.DATEONLY,

@@ -18,7 +18,7 @@ function initEquipos(instanciaBD) {
 
     router.get('/all', (req, res) => {
         return conexion.transaction(t => {
-                return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;", {
+                return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;", {
                         transaction: t,
                         limit: 1,
                         lock: true,

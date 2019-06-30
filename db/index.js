@@ -7,6 +7,7 @@ function prueba(...parametros) {
         var conexionBD = null;
         if (parametros.length == 1) {
             conexionBD = new Sequelize(parametros[0]);
+            //conexionBD = new Sequelize('postgres://ebyivwns:DcVXBBQD5JT5gT9ZAIcc3wCzMYgxjjis@raja.db.elephantsql.com:5432/ebyivwns');
         } else {
             conexionBD = new Sequelize(parametros[0], parametros[1], parametros[2], {
                 host: parametros[3],
@@ -20,7 +21,7 @@ function prueba(...parametros) {
                     acquire: 30000,
                     idle: 10000
                 },
-                logging: false
+                //logging: false
             });
         }
         resolve(conexionBD);
@@ -60,7 +61,6 @@ var conexion = function (...parametros) {
         });
 
     })
-
 }
 
 module.exports.conexion = conexion;

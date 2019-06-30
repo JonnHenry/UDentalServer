@@ -17,32 +17,33 @@ function initIngreso(instanciaBD) {
             data: [
                 {
                     categoria: 1,
-                    id: id,
-                    nombre: req.body.marca,
-                    descripcion: req.body.observacion,
-                    precio_unitario: req.body.estado,
-                    marca: parametros.marca,
-                    observacion: parametros.observacion,
-                    estado: parametros.estado,
-                    stock: parametros.stock
+                    id: id(Int),
+                    nombre: 'Cadena',
+                    descripcion: 'Descripcion',
+                    precio_unitario: 25.56895,
+                    marca: 'Marca',
+                    observacion: 'Observacion XD',
+                    estado: 'Dañado'||'Buen Estado'||'Reparación' ,
+                    stock: Entero
                 },
                 { //Para Insumos
                     categoria: 2
-                    id: id,
-                    nombre: req.body.marca,
-                    descripcion: req.body.observacion,
-                    precio_unitario: req.body.estado,
-                    fecha_caducidad: fecha_caducidad
+                    id: id(Int),
+                    nombre: 'cadena(String)',
+                    descripcion: 'Descripción XD',
+                    precio_unitario: 15.36,
+                    stock: Entero
+                    fecha_caducidad: "17-02-2020"
                 },
                 {
-                     categoria: 3,
-                    id: id,
-                    nombre: req.body.marca,
-                    descripcion: req.body.observacion,
-                    precio_unitario: req.body.estado,
-                    observacion: parametros.observacion,
-                    estado: parametros.estado,
-                    stock: parametros.stock
+                    categoria: 3,
+                    id: id(Integer),
+                    nombre: "Nombre",
+                    descripcion: "",
+                    precio_unitario: 85.69,
+                    observacion: "Observacion XD",
+                    estado: 'Dañado'||'Buen Estado'||'Reparación',
+                    stock: Entero
                 }
             ]
         }
@@ -63,11 +64,10 @@ function initIngreso(instanciaBD) {
                                         },
                                         defaults: {
                                             nombre: element.marca,
-                                            descripcion: element.observacion,
+                                            descripcion: element.descripcion,
                                             precio_unitario: element.estado,
                                             categoria: categorias[element.categoria - 1]
-                                        }
-                                    }, {
+                                        },
                                         transaction: t
                                     }).then(([result, created]) => {
                                         if (created) {
@@ -339,73 +339,132 @@ function initIngreso(instanciaBD) {
 
 module.exports.initIngreso = initIngreso
 
-function insertEquipos(parametros, Equipo, t) {
-    return new Promise((resolve, reject) => {
-        var val = Equipo.create({
-            id_producto: parametros.id,
-            marca: parametros.marca,
-            observacion: parametros.observacion,
-            estado: parametros.estado,
-            stock: parametros.stock
-        }, {
-            transaction: t
-        }).then(
-            resolve(val)
-        ).catch((error) => {
-            reject(val);
+/*
+return Productos.findOrCreate({
+        where: {
+            id: element.id
+        },
+        defaults: {
+            nombre: parametros.marca,
+            descripcion: parametros.descripcion,
+            precio_unitario: parametros.estado,
+            categoria: 'Equipo'
+        },
+        transaction: transaction
+    }).then(
+        Equipo.findOrCreate({
+            where: {
+                id_producto: parametros.id
+            },
+            defaults: {
+                marca: parametros.marca,
+                observacion: parametros.observacion,
+                estado: parametros.estado,
+                stock: parametros.stock
+            },
+            transaction: transaction
         })
-    });
-}
+    )
+*/
 
+function insertEquipos(parametros, Equipos, Productos, transaction) {
+    return Equipos.findOne({
+        where: {
+            id_producto: parametros.id
+        }
+    }, {
+        transaction: transaction
+    }).then(result => {
+        if (result) {
+            parametros.stock = result.stock + parametros.stock;
+            return result.update(parametros, {
+                transaction: transaction,
+                limit: 1,
+                lock: true
+            }).then(result => {
+                return Productos.update(parametros, {
+                    where: {
+                        id: parametros.id
+                    },
+                    transaction: transaction,
+                    limit: 1,
+                    lock: true
+                });
+            });
+        } else {
+            return Productos.create(parametros, {
+                transaction: transaction
+            }).then(() => {
+                return Equipos.create({
+                    id_producto: parametros.id,
+                    marca: parametros.marca,
+                    observacion: parametros.observacion,
+                    estado: parametros.estado,
+                    stock: parametros.stock
+                }, {
+                    transaction: transaction
+                })
+            })
+        }
+    })
+
+}
 
 function insertInsumos(parametros, Insumos, t) {
     return new Promise((resolve, reject) => {
-        var val = Insumos.create({
-            id_producto: parametros.id,
-            fecha_caducidad: parametros.fecha_caducidad
-        }, {
-            transaction: t
-        }).then(
-            resolve(val)
-        ).catch((error) => {
-            reject(val);
-        })
+        setTimeout(function () {
+            var val = Insumos.create({
+                id_producto: parametros.id,
+                fecha_caducidad: parametros.fecha_caducidad
+            }, {
+                transaction: t
+            }).then(
+                resolve(val)
+            ).catch((error) => {
+                reject(val);
+            })
+        }, 250);
     });
 }
 
 function insertInstrumentos(parametros, Instrumentos, t) {
     return new Promise((resolve, reject) => {
-        var val = Instrumentos.create({
-            id_producto: parametros.id,
-            observacion: parametros.observacion,
-            estado: parametros.estado,
-            stock: parametros.stock
-        }, {
-            transaction: t
-        }).then(
-            resolve(val)
-        ).catch((error) => {
-            reject(val);
-        })
+        setTimeout(function () {
+            var val = Instrumentos.create({
+                id_producto: parametros.id,
+                observacion: parametros.observacion,
+                estado: parametros.estado,
+                stock: parametros.stock
+            }, {
+                transaction: t
+            }).then(
+                resolve(val)
+            ).catch((error) => {
+                reject(val);
+            })
+        }, 250);
     });
 }
 
 function updateProducto(updateData, Productos, transaction) {
     return new Promise((resolve, reject) => {
-        var categorias = ['Equipo', 'Insumo', 'Instrumento'];
-        updateData.categoria = categorias[updateData.categoria - 1];
-        Productos.update(updateData, {
-                where: {
-                    id: req.params.id
-                },
-                transaction: transaction,
-                limit: 1,
-                lock: true
-            }).then(() => {
-                resolve(true);
-            })
-            .catch(() => {
-                reject(false);
-            })
+        setTimeout(function () {
+            var categorias = ['Equipo', 'Insumo', 'Instrumento'];
+            updateData.categoria = categorias[updateData.categoria - 1];
+            Productos.update(updateData, {
+                    where: {
+                        id: req.params.id
+                    },
+                    transaction: transaction,
+                    limit: 1,
+                    lock: true
+                }).then(() => {
+                    resolve(true);
+                })
+                .catch(() => {
+                    reject(false);
+                })
+        }, 250);
+
     })
 }
