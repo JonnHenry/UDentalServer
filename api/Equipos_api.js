@@ -17,31 +17,21 @@ function initEquipos(instanciaBD) {
     //  Obtener todos los equipos
 
     router.get('/all', (req, res) => {
-        return conexion.transaction(t => {
-                return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;", {
-                        transaction: t,
-                        limit: 1,
-                        lock: true,
-                        raw: true
-                    })
-                    .then(([results, metadata]) => {
-                        res.status(200);
-                        return ({
-                            "error": false,
-                            "data": results
-                        });
-                    })
-                    .catch(err => {
-                        res.status(500);
-                        return ({
-                            message: 'Error, vuelva a intentarlo.',
-                            inserted: false
-                        })
-                    })
+        return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;")
+            .then(([results, metadata]) => {
+
+                res.json({
+                    "error": false,
+                    "data": results
+                }).status(200);
             })
-            .then(result => {
-                res.json(result)
-            });
+            .catch(err => {
+
+                res.json({
+                    message: 'Error, vuelva a intentarlo.',
+                    inserted: false
+                }).status(500);
+            })
     });
 
     /*
@@ -84,10 +74,10 @@ function initEquipos(instanciaBD) {
 
 
     //Crear un nuevo equipo
-    
 
-    
-    
+
+
+
 
     router.put('/update/all/:id', (req, res) => {
         return conexion.transaction(t => {

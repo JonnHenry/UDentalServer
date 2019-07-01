@@ -16,30 +16,21 @@ function initInsumos(instanciaBD) {
     //  Obtener todos los insumos
 
     router.get('/all', (req, res) => {
-        return conexion.transaction(t => {
-                return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto", {
-                        transaction: t
-                    })
-                    .then(([results, metadata]) => {
-                        res.status(200);
-                        console.log(data);
-                        
-                        return ({
-                            "error": false,
-                            "data": results
-                        });
-                    })
-                    .catch(err => {
-                        res.status(500);                       
-                        return ({
-                            message: 'Error, vuelva a intentarlo.',
-                            inserted: false
-                        })
-                    })
+        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto")
+            .then(([results, metadata]) => {
+                res.json({
+                    "error": false,
+                    "data": results
+                }).status(200)
             })
-            .then(result => {
-                res.json(result)
-            });
+            .catch(err => {
+
+                res.json({
+                    message: 'Error, vuelva a intentarlo.',
+                    inserted: false
+                }).status(200)
+            })
+
     });
 
     /*
@@ -92,7 +83,7 @@ function initInsumos(instanciaBD) {
         } 
     */
 
-   return router
+    return router
 }
 
 

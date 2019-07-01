@@ -50,119 +50,76 @@ function initIngreso(instanciaBD) {
     */
 
     router.post('/new', (req, res) => {
-        var newArray = req.body.data;
-        var errorArray = [];
-        var idFails = [];
-        var categorias = ['Equipo', 'Insumo', 'Instrumento'];
-        try {
-            return new Promise((resolve, reject) => {
-                    newArray.forEach(element => {
-                        return conexion.transaction(t => {
-                                return Productos.findOrCreate({
-                                        where: {
-                                            id: element.id
-                                        },
-                                        defaults: {
-                                            nombre: element.marca,
-                                            descripcion: element.descripcion,
-                                            precio_unitario: element.estado,
-                                            categoria: categorias[element.categoria - 1]
-                                        },
-                                        transaction: t
-                                    }).then(([result, created]) => {
-                                        if (created) {
-                                            if (element.categoria = 1) {
-                                                return insertEquipos(element, Equipos, t).then(result => {
-                                                        res.status(200);
-                                                    })
-                                                    .catch(() => {
-                                                        res.status(200);
-                                                        errorArray.push({
-                                                            'message': 'Los valores ingresados en el equipo con la clave ' + element.id + ' no se encuentran ingresados de una manera correcta, reviselos',
-                                                            'inserted': false
-                                                        })
-                                                        idFails.push(element.id)
-                                                    });
-                                            } else if (element.categoria = 2) {
-                                                return insertInsumos(element, Insumos, t).then(result => {
-                                                        res.status(200);
-                                                    })
-                                                    .catch(() => {
-                                                        res.status(500);
-                                                        errorArray.push({
-                                                            'message': 'Los valores ingresados en el insumo con la clave ' + element.id + ' no se encuentran ingresados de una manera correcta, reviselos',
-                                                            'inserted': false
-                                                        })
-                                                        idFails.push(element.id)
-                                                    });
-                                            } else if (element.categoria = 3) {
-                                                return insertInstrumentos(element, Instrumentos, t).then(result => {
-                                                        res.status(200);
-                                                    })
-                                                    .catch(() => {
-                                                        res.status(500);
-                                                        errorArray.push({
-                                                            'message': 'Los valores ingresados en el instrumento con la clave ' + element.id + ' no se encuentran ingresados de una manera correcta, reviselos',
-                                                            'inserted': false
-                                                        })
-                                                        idFails.push(element.id)
-                                                    });
-                                            }
-                                        } else {
-                                            res.status(200);
-                                            errorArray.push({
-                                                'message': 'El producto ingresado con el código ' + element.id + ' ya se encuentra registrado',
-                                                'inserted': false
-                                            })
-                                            idFails.push(element.id)
-                                        }
-                                    })
-                                    .catch(() => {
-                                        res.status(200);
-                                        errorArray.push({
-                                            'message': 'Error verifique los datos y el valor de los campos en el producto ' + element.id,
-                                            'inserted': false
-                                        })
-                                        idFails.push(element.id)
-                                    });
-                            })
-                            .then(() => {
-                                console.log('Transacción realizada de manera correcta');
-                            })
-                    });
-                    resolve(true);
-                    reject(false)
-                })
-                .then((resultOp) => {
-                    if (resultOp) {
-                        res.json({
-                            'message': 'Todos los productos se han ingresado con exito',
-                            'insertedAll': true,
-                            'idFails': []
-                        });
-                    } else {
-                        res.json({
-                            'message': errorArray,
-                            'insertedAll': false,
-                            'idFails': idFails
-                        });
-                    }
-                })
-                .catch(() => {
-                    res.json({
-                        'message': errorArray,
-                        'insertedAll': false,
-                        'idFails': idFails
-                    });
-                })
+        var arrayError = [];
+        var arrayMessage = [];
+        var promises = [];
+        req.body.forEach(parametros => {
+            if (parametros.categoria == 1) {
+                var promiseEquipo = conexion.query("SELECT create_or_update_equipo(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ", '" + parametros.marca + "','" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");");
+                promises.push(promiseEquipo);
+                promiseEquipo.then(([results, metadata]) => {
+                        if (!results[0].create_or_update_equipo) {
+                            arrayError.push(parametros.id)
+                            arrayMessage.push('Equipo ' + parametros.id + ' ya esta ingresado.')
+                        }
+                    })
+                    .catch(() => {
+                        arrayError.push(parametros.id)
+                        arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
+                    })
+            } else if (parametros.categoria == 2) {
+                var promiseInsumo = conexion.query("SELECT create_or_update_insumo(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ",'" + parametros.fecha_caducidad + "'," + parametros.stock + ");")
+                promises.push(promiseInsumo)
+                promiseInsumo.then(([results, metadata]) => {
+                        if (!results[0].create_or_update_insumo) {
+                            arrayError.push(parametros.id)
+                            arrayMessage.push('Equipo ' + parametros.id + ' ya ingresado.')
+                        }
+                    })
+                    .catch(() => {
+                        arrayError.push(parametros.id)
+                        arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
+                    })
+            } else if (parametros.categoria == 3) {
+                var promiseInstrumento = conexion.query("SELECT create_or_update_instrumento(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ",'" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");")
+                promises.push(promiseInstrumento)
+                promiseInstrumento.then(([results, metadata]) => {
+                        if (!results[0].create_or_update_instrumento) {
+                            arrayError.push(parametros.id)
+                            arrayMessage.push('Equipo ' + parametros.id + ' ya ingresado.')
+                        }
+                    })
+                    .catch(() => {
+                        arrayError.push(parametros.id)
+                        arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
+                    })
+            }
+        })
 
-        } catch (error) {
-            res.status(500);
-            res.json({
-                'message': 'Error, verifique el tipo de solicitud y los valores de la misma',
-                'inserted': false
+        Promise.all(promises).then(() => {
+                console.log(promises.length);
+                if (arrayError.length == 0) {
+                    res.json({
+                        'message': 'Todos los productos se han ingresado con exito o se han actualizado',
+                        'insertedAll': true,
+                        'idFails': arrayError
+                    }).status(200);
+                } else {
+                    res.json({
+                        'message': arrayMessage,
+                        'insertedAll': false,
+                        'idFails': arrayError
+                    }).status(200)
+                }
             })
-        }
+            .catch((error) => {
+                console.log(error);
+                res.json({
+                    'message': "Error al enviar la cantidad de datos",
+                    'insertedAll': false,
+                    'idFails': arrayError
+                }).status(200)
+            })
     });
 
     /*

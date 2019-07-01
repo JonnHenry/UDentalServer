@@ -1,5 +1,5 @@
 /*TODO: Pendiente como eliminar un instrumento
-*/
+ */
 
 var express = require('express');
 var router = express.Router();
@@ -16,31 +16,21 @@ function initInstrumentos(instanciaBD) {
     //  Obtener todos los instrumentos
 
     router.get('/all', (req, res) => {
-        return conexion.transaction(t => {
-                return conexion.query("SELECT id, nombre, descripcion, precio_unitario, categoria,fecha_creacion, fecha_actualizacion, fecha_caducidad FROM instrumentos JOIN productos ON productos.id = instrumentos.id_producto;", {
-                        transaction: t,
-                        limit: 1,
-                        lock: true,
-                        raw: true
-                    })
-                    .then(([results, metadata]) => {
-                        res.status(200);
-                        return ({
-                            "error": false,
-                            "data": results
-                        });
-                    })
-                    .catch(err => {
-                        res.status(500);
-                        return ({
-                            message: 'Error, vuelva a intentarlo.',
-                            inserted: false
-                        })
-                    })
+        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, categoria,fecha_creacion, fecha_actualizacion, observacion, estado, stock  FROM instrumentos JOIN productos ON productos.id = instrumentos.id_producto;")
+            .then(([results, metadata]) => {
+                res.json({
+                    "error": false,
+                    "data": results
+                }).status(200);
             })
-            .then(result => {
-                res.json(result)
-            });
+            .catch(err => {
+                res.status(500);
+                return ({
+                    message: 'Error, vuelva a intentarlo.',
+                    inserted: false
+                })
+            })
+
     });
 
     /*
@@ -82,7 +72,7 @@ function initInstrumentos(instanciaBD) {
     });
 
 
-    
+
 
 
     /*
@@ -95,7 +85,7 @@ function initInstrumentos(instanciaBD) {
             }
         } 
     */
-    
+
 
     return router
 }

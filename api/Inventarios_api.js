@@ -22,9 +22,9 @@ function initInventarios(instanciaBD){
         }
     */
         /*TODO: Hacer para ingresar los datos del usuario y con result del ingreso se puede recuperar el inventario creado*/ 
-    router.post('/invetrario_control', (req,res)=>{
+   /*router.post('/invetrario_control', (req,res)=>{
         
-    })
+    })*/
 
     return router;
 }
