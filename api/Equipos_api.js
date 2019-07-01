@@ -26,7 +26,7 @@ function initEquipos(instanciaBD) {
                 }).status(200);
             })
             .catch(err => {
-
+                res.json(err)
                 res.json({
                     message: 'Error, vuelva a intentarlo.',
                     inserted: false
