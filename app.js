@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-const port = 3000; //Puerto donde va a funcionar express.js
+const port = 8080; //Puerto donde va a funcionar express.js
 var cors = require('cors');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
