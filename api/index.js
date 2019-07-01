@@ -8,6 +8,10 @@ var ingresoDatosApi = require('./Ingreso_api').initIngreso;
                     models: models,
 */
 
+app.get("/", (req, res) => {
+    res.send("<h1>Servidor funcionando correctamente</h1>");
+  })
+
 function inicialiceRouter(instanciaBD, app) {
     return new Promise((resolve, reject) => {
         try {

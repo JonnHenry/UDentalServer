@@ -15,6 +15,3 @@ conexion('postgres://udentalserver@udentalserver:Udental_server@udentalserver.po
 });
 // conexionBD Me trae la conexión y los modelos de la base de datos
 
-app.get("/", (req, res) => {
-  res.send("<h1>Servidor funcionando correctamente</h1>");
-})
