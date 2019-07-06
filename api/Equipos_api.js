@@ -4,9 +4,6 @@
 
 var express = require('express');
 var router = express.Router();
-/*
-    Entra un objeto JSON con productos y equipos
-*/
 
 //Ruta del enrutador actual /equipo
 function initEquipos(instanciaBD) {
@@ -46,116 +43,72 @@ function initEquipos(instanciaBD) {
         createQuery(req.body.colAndValueSearch).then(querySearch => {
             return conexion.query(querySearch)
                 .then(([results, metadata]) => {
-                    res.json ({
+                    res.json({
                         "error": false,
                         "message": "Se econtraron valores para los criterios de busqueda",
                         "data": results
                     }).status(200);
                 })
-                .catch(err => {                  
-                    res.json ({
-                        "message": 'Error, vuelva a intentarlo y revise ingresados.',
+                .catch(err => {
+                    res.json({
+                        "message": 'Error, vuelva a intentarlo y revise los campos ingresados.',
                         "error": true,
                         "data": []
                     }).status(500)
                 })
         })
-});
-
-router.put('/update/:id', (req, res) => {
-    try {
-        return conexion.transaction(t => {
-            return Equipos.update(req.body.dataUpdate, {
-                where: {
-                    id_producto: req.params.id
-                },
-                transaction: t,
-                limit: 1,
-                lock: true
-            }).then(() => {
-                return Productos.update(req.body.dataUpdate, {
-                    where: {
-                        id: req.params.id
-                    },
-                    transaction: t,
-                    limit: 1,
-                    lock: true
-                }).then(() => {
-                    res.status(200);
-                    return ({
-                        'message': 'El Equipo fue actualizado, de manera correcta',
-                        'updated': true
-                    })
-                })
-            })
-        });
-    } catch (error) {
-        return ({
-            'message': 'El Equipo no fue actualizado revise los valores ingresados, vuelva a intentarlo',
-            'updated': false
-        })
-    }
-});
+    });
 
 
+    /*
+        Formato del objeto JSON a enviar
+        {
+            "dataUpdate": {
+                "nombre": "Equipo de prueba 1"
+            }
+        }
+    */
+    router.put('/update/:id', (req, res) => {
 
-router.put('/update/all/:id', (req, res) => {
-    return conexion.transaction(t => {
-        return Equipos.update({
-                marca: req.body.marca,
-                observacion: req.body.observacion,
-                estado: req.body.estado,
-                stock: req.body.stock
-            }, {
-                where: {
-                    id_producto: req.params.id
-                },
-                transaction: t,
-                limit: 1,
-                lock: true
-            }).then(() => {
-                return Productos.update({
-                        nombre: req.body.nombre,
-                        descripcion: req.body.descripcion,
-                        precio_unitario: req.body.precio_unitario
-                    }, {
+        try {
+            return conexion.transaction(t => {
+                    return Equipos.update(req.body.dataUpdate, {
                         where: {
-                            id: req.params.id
+                            id_producto: req.params.id
                         },
                         transaction: t,
                         limit: 1,
                         lock: true
                     }).then(() => {
-                        res.status(200);
-                        return ({
-                            'message': 'El Equipo fue actualizado, de manera correcta',
-                            'updated': true
+                        return Productos.update(req.body.dataUpdate, {
+                            where: {
+                                id: req.params.id
+                            },
+                            transaction: t,
+                            limit: 1,
+                            lock: true
+                        }).then(() => {
+                            res.status(200);
+                            return ({
+                                'message': 'El Equipo fue actualizado, de manera correcta',
+                                'updated': true
+                            })
                         })
                     })
-                    .catch(() => {
-                        res.status(500);
-                        return ({
-                            'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                            'updated': false
-                        })
-                    });
-            })
-            .catch(() => {
-                res.status(500);
-                return ({
-                    'message': 'El Equipo no fue actualizado, vuelva a intentarlo',
-                    'updated': false
                 })
-            });
-
-    }).then(result => {
-        res.json(result)
+                .then(valor => {
+                    res.json(valor)
+                });
+        } catch (error) {
+            res.json({
+                'message': 'El Equipo no fue actualizado revise los valores ingresados, vuelva a intentarlo',
+                'updated': false
+            })
+        }
     });
-})
 
-return router
+    return router
 }
-
 
 function createQuery(parametros) {
     var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto';

@@ -56,7 +56,6 @@ function initIngreso(instanciaBD) {
         req.body.forEach(parametros => {
             if (parametros.categoria == 1) {
                 var promiseEquipo = conexion.query("SELECT create_or_update_equipo(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ", '" + parametros.marca + "','" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");");
-                promises.push(promiseEquipo);
                 promiseEquipo.then(([results, metadata]) => {
                         if (!results[0].create_or_update_equipo) {
                             arrayError.push(parametros.id)
@@ -67,9 +66,9 @@ function initIngreso(instanciaBD) {
                         arrayError.push(parametros.id)
                         arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
                     })
+                promises.push(promiseEquipo);
             } else if (parametros.categoria == 2) {
                 var promiseInsumo = conexion.query("SELECT create_or_update_insumo(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ",'" + parametros.fecha_caducidad + "'," + parametros.stock + ");")
-                promises.push(promiseInsumo)
                 promiseInsumo.then(([results, metadata]) => {
                         if (!results[0].create_or_update_insumo) {
                             arrayError.push(parametros.id)
@@ -80,9 +79,10 @@ function initIngreso(instanciaBD) {
                         arrayError.push(parametros.id)
                         arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
                     })
+                promises.push(promiseInsumo)
             } else if (parametros.categoria == 3) {
                 var promiseInstrumento = conexion.query("SELECT create_or_update_instrumento(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ",'" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");")
-                promises.push(promiseInstrumento)
+
                 promiseInstrumento.then(([results, metadata]) => {
                         if (!results[0].create_or_update_instrumento) {
                             arrayError.push(parametros.id)
@@ -94,31 +94,34 @@ function initIngreso(instanciaBD) {
                         arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
                     })
             }
+            promises.push(promiseInstrumento)
         })
 
         Promise.all(promises).then(() => {
-                console.log(promises.length);
-                if (arrayError.length == 0) {
+                setTimeout(() => {
+                    if (arrayError.length == 0) {
+                        res.json({
+                            'message': 'Todos los productos se han ingresado o se han actualizado con exito',
+                            'insertedAll': true,
+                            'idFails': arrayError
+                        }).status(200);
+                    } else {
+                        res.json({
+                            'message': arrayMessage,
+                            'insertedAll': false,
+                            'idFails': arrayError
+                        }).status(200)
+                    }
+                }, 100);
+            })
+            .catch((error) => {
+                setTimeout(() => {
                     res.json({
-                        'message': 'Todos los productos se han ingresado con exito o se han actualizado',
-                        'insertedAll': true,
-                        'idFails': arrayError
-                    }).status(200);
-                } else {
-                    res.json({
-                        'message': arrayMessage,
+                        'message': "Error al enviar la cantidad de datos",
                         'insertedAll': false,
                         'idFails': arrayError
                     }).status(200)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                res.json({
-                    'message': "Error al enviar la cantidad de datos",
-                    'insertedAll': false,
-                    'idFails': arrayError
-                }).status(200)
+                }, 100)
             })
     });
 
