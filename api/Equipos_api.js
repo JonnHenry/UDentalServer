@@ -1,6 +1,3 @@
-/*
-    TODO: -Eliminar un producto ver como hacer si con el campo o agregar otro
-*/
 
 var express = require('express');
 var router = express.Router();
@@ -68,7 +65,7 @@ function initEquipos(instanciaBD) {
             }
         }
     */
-    router.put('/update/:id', (req, res) => {
+    router.post('/update/:id', (req, res) => {
 
         try {
             return conexion.transaction(t => {

@@ -10,7 +10,7 @@ module.exports = function (sequelize) {
     const InventariosControl = require('./InventariosControl')(sequelize);
     const InventariosEntrega = require('./InventariosEntrega')(sequelize);
     const TratamientoProductos = require('./Productos')(sequelize);
-    //Un Equipo,insumo o instrumento pertenece a una Inventario ya sea de control o entrega
+    const InventariosProductos = require('./Inventario_Productos')(sequelize);
 
     return {
         Productos: Productos,
@@ -21,6 +21,7 @@ module.exports = function (sequelize) {
         InventariosControl: InventariosControl,
         InventariosEntrega: InventariosEntrega,
         Tratamientos: Tratamientos,
-        TratamientoProductos: TratamientoProductos
+        TratamientoProductos: TratamientoProductos,
+        InventariosProductos: InventariosProductos
     };
 };

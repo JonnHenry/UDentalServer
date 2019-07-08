@@ -82,7 +82,6 @@ function initIngreso(instanciaBD) {
                 promises.push(promiseInsumo)
             } else if (parametros.categoria == 3) {
                 var promiseInstrumento = conexion.query("SELECT create_or_update_instrumento(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ",'" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");")
-
                 promiseInstrumento.then(([results, metadata]) => {
                         if (!results[0].create_or_update_instrumento) {
                             arrayError.push(parametros.id)
@@ -98,21 +97,19 @@ function initIngreso(instanciaBD) {
         })
 
         Promise.all(promises).then(() => {
-                setTimeout(() => {
-                    if (arrayError.length == 0) {
-                        res.json({
-                            'message': 'Todos los productos se han ingresado o se han actualizado con exito',
-                            'insertedAll': true,
-                            'idFails': arrayError
-                        }).status(200);
-                    } else {
-                        res.json({
-                            'message': arrayMessage,
-                            'insertedAll': false,
-                            'idFails': arrayError
-                        }).status(200)
-                    }
-                }, 100);
+                if (arrayError.length == 0) {
+                    res.json({
+                        'message': 'Todos los productos se han ingresado o se han actualizado con exito',
+                        'insertedAll': true,
+                        'idFails': arrayError
+                    }).status(200);
+                } else {
+                    res.json({
+                        'message': arrayMessage,
+                        'insertedAll': false,
+                        'idFails': arrayError
+                    }).status(200)
+                }
             })
             .catch((error) => {
                 setTimeout(() => {

@@ -6,6 +6,8 @@ app.get("/", (req, res) => {
   res.send("<h1>Servidor funcionando correctamente</h1>");
 })
 
+//postgres://vemqjijm:0j1siCgvszEiwg6E4LLBjELw-yw3qWPx@raja.db.elephantsql.com:5432/vemqjijm
+//'pruebas', 'admin', '123456789','localhost'
 conexion('postgres://vemqjijm:0j1siCgvszEiwg6E4LLBjELw-yw3qWPx@raja.db.elephantsql.com:5432/vemqjijm').then(result => {
   apiUse(result, app).then(conect => {
     if (conect) {

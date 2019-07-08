@@ -2,6 +2,7 @@ var equiposApi = require('./Equipos_api').initEquipos;
 var insumosApi = require('./Insumos_api').initInsumos;
 var instrumentosApi = require('./Instrumentos_api').initInstrumentos;
 var ingresoDatosApi = require('./Ingreso_api').initIngreso;
+var inventariosApi = require('./Inventarios_api').initInventarios
 
 /*
      conexionBD: conexionBD,
@@ -33,6 +34,9 @@ function inicialiceRouter(instanciaBD, app) {
                 Insumos: instanciaBD.models.Insumos,
                 Equipos: instanciaBD.models.Equipos,
                 Instrumentos: instanciaBD.models.Instrumentos,
+                conexionBD: instanciaBD.conexionBD
+            }))
+            app.use('/inventarios',inventariosApi({
                 conexionBD: instanciaBD.conexionBD
             }))
             resolve(true);

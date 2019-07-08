@@ -6,16 +6,11 @@ module.exports = function (sequelize) {
             type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false
+            autoIncrement: true
         },
         nombre: {
             type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: {
-                    msg: "El campo no puede ser vacio"
-                }
-            }
+            allowNull: false
         },
         descripcion: {
             type: DataTypes.STRING,
@@ -23,10 +18,11 @@ module.exports = function (sequelize) {
             defaultValue: "Ninguna"
         },
         fecha_creacion: {
-            type: DataTypes.DATEONLY
+            type: 'TIMESTAMP'
         },
         fecha_actualizacion: {
-            type: DataTypes.DATEONLY
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         }
     }, {
         indexes: [{
@@ -38,8 +34,8 @@ module.exports = function (sequelize) {
                 fields: ['nombre']
             }
         ],
-        updatedAt: 'updated_at',
-        createdAt: 'created_at',
+        updatedAt: 'fecha_creacion',
+        createdAt: 'fecha_actualizacion',
         modelName: 'inventarios',
         timestamps: false
     });

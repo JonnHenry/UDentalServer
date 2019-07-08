@@ -78,7 +78,7 @@ function initInstrumentos(instanciaBD) {
         }
     */
 
-    router.put('/update/:id', (req, res) => {
+    router.post('/update/:id', (req, res) => {
         try {
             return conexion.transaction(transaction => {
                     return Instrumentos.update(req.body.dataUpdate, {

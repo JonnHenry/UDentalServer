@@ -79,7 +79,7 @@ function initInsumos(instanciaBD) {
         }
     */
 
-    router.put('/update/:id', (req, res) => {
+    router.post('/update/:id', (req, res) => {
         try {
             return conexion.transaction(transaction => {
                     return Insumos.update(req.body.dataUpdate, {
