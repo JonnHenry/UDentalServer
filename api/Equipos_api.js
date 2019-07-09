@@ -36,7 +36,7 @@ function initEquipos(instanciaBD) {
     */
 
     //Obtener los equipos con 
-    router.get('/find', (req, res) => {
+    router.post('/find', (req, res) => {
         createQuery(req.body.colAndValueSearch).then(querySearch => {
             return conexion.query(querySearch)
                 .then(([results, metadata]) => {
