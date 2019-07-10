@@ -11,7 +11,7 @@ function initEquipos(instanciaBD) {
     //  Obtener todos los equipos
 
     router.get('/all', (req, res) => {
-        return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto;")
+        return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto WHERE productos.activo=true")
             .then(([results, metadata]) => {
 
                 res.json({
@@ -20,7 +20,6 @@ function initEquipos(instanciaBD) {
                 }).status(200);
             })
             .catch(err => {
-                res.json(err)
                 res.json({
                     message: 'Error, vuelva a intentarlo.',
                     inserted: false
@@ -66,7 +65,6 @@ function initEquipos(instanciaBD) {
         }
     */
     router.post('/update/:id', (req, res) => {
-
         try {
             return conexion.transaction(t => {
                     return Equipos.update(req.body.dataUpdate, {
@@ -103,18 +101,16 @@ function initEquipos(instanciaBD) {
             })
         }
     });
-
     return router
 }
 
 function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto';
+    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto WHERE productos.activo=true ';
     var cont = 0;
     const cantArg = parametros.length;
     return new Promise((resolve, reject) => {
         if (cantArg != 0) {
             var enteros = ['stock', 'id', 'precio_unitario'];
-            query = query + ' WHERE '
             parametros.forEach(element => {
                 var parametros = element.split('=');
                 if (cantArg - 1 > cont) {

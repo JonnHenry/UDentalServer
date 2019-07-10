@@ -3,6 +3,7 @@ var insumosApi = require('./Insumos_api').initInsumos;
 var instrumentosApi = require('./Instrumentos_api').initInstrumentos;
 var ingresoDatosApi = require('./Ingreso_api').initIngreso;
 var inventariosApi = require('./Inventarios_api').initInventarios
+var tratamientosApi = require('./Tratamientos').initTratamientos
 
 /*
      conexionBD: conexionBD,
@@ -38,6 +39,11 @@ function inicialiceRouter(instanciaBD, app) {
             }))
             app.use('/inventarios',inventariosApi({
                 conexionBD: instanciaBD.conexionBD
+            }))
+            app.use('/tratamientos',tratamientosApi({
+                conexionBD: instanciaBD.conexionBD,
+                Tratamientos: instanciaBD.models.Tratamientos,
+                TratamientoProductos: instanciaBD.models.TratamientoProductos
             }))
             resolve(true);
         } catch (error) {

@@ -1,5 +1,4 @@
-/*TODO: Pendiente como eliminar un instrumento
- */
+
 
 var express = require('express');
 var router = express.Router();
@@ -16,7 +15,7 @@ function initInstrumentos(instanciaBD) {
     //  Obtener todos los instrumentos
 
     router.get('/all', (req, res) => {
-        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, categoria,fecha_creacion, fecha_actualizacion, observacion, estado, stock  FROM instrumentos JOIN productos ON productos.id = instrumentos.id_producto;")
+        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, categoria,fecha_creacion, fecha_actualizacion, observacion, estado, stock  FROM instrumentos JOIN productos ON productos.id = instrumentos.id_producto WHERE productos.activo=true")
             .then(([results, metadata]) => {
                 res.json({
                     "error": false,
@@ -115,21 +114,17 @@ function initInstrumentos(instanciaBD) {
             })
         }
     });
-
-
-
     return router
 }
 
 
 function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = instrumentos.id_producto';
+    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = instrumentos.id_producto WHERE productos.activo=true ';
     var cont = 0;
     const cantArg = parametros.length;
     return new Promise((resolve, reject) => {
         if (cantArg != 0) {
             var enteros = ['stock', 'id', 'precio_unitario'];
-            query = query + ' WHERE '
             parametros.forEach(element => {
                 var parametros = element.split('=');
                 if (cantArg - 1 > cont) {

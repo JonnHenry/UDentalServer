@@ -1,4 +1,19 @@
+//TODO: Se borro el campo duración se debe de inicializar la base de datos de nuevo 
+
 const DataTypes = require('sequelize/lib/data-types');
+
+/*
+id,
+nombre,
+precio,
+descripcion,
+fecha_creacion,
+fecha_actualizacion
+
+
+
+*/
+
 
 module.exports = function (sequelize) {
     const Tratamientos = sequelize.define('tratamientos', {
@@ -6,16 +21,10 @@ module.exports = function (sequelize) {
             type: DataTypes.BIGINT,
             primaryKey: true,
             unique: true,
-            allowNull: false,
-            onUpdate: 'CASCADE'
+            autoIncrement: true
         },
         nombre: {
             type: DataTypes.STRING,
-            allowNull: false,
-            onUpdate: 'CASCADE'
-        },
-        duracion_dias: {
-            type: DataTypes.INTEGER,
             allowNull: false,
             onUpdate: 'CASCADE'
         },
@@ -27,6 +36,11 @@ module.exports = function (sequelize) {
         descripcion: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        activo:{
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: true
         },
         fecha_creacion: {
             type: DataTypes.DATEONLY,

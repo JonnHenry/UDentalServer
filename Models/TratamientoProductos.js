@@ -1,11 +1,11 @@
 const DataTypes = require('sequelize/lib/data-types');
 
+
 module.exports = function (sequelize) {
     const TratamientosProductos = sequelize.define('tratamiento_productos', {
         id_tratamiento: {
             type: DataTypes.BIGINT,
             primaryKey: true,
-            unique: true,
             allowNull: false,
             references: {
                 model: 'tratamientos',
@@ -13,7 +13,8 @@ module.exports = function (sequelize) {
             }
         },
         id_producto: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
+            primaryKey: true,
             allowNull: false,
             references: {
                 model: 'productos',

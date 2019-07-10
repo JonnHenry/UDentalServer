@@ -27,11 +27,7 @@ module.exports = function (sequelize) {
     }, {
         indexes: [{
                 unique: false,
-                fields: ['fecha_creacion']
-            },
-            {
-                unique: false,
-                fields: ['nombre']
+                fields: ['fecha_creacion','nombre']
             }
         ],
         updatedAt: 'fecha_creacion',

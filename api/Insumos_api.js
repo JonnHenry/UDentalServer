@@ -14,7 +14,7 @@ function initInsumos(instanciaBD) {
     //  Obtener todos los insumos
 
     router.get('/all', (req, res) => {
-        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto")
+        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true")
             .then(([results, metadata]) => {
                 res.json({
                     "error": false,
@@ -121,50 +121,13 @@ function initInsumos(instanciaBD) {
 }
 
 
-
 function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = insumos.id_producto';
+    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true ';
     var cont = 0;
     const cantArg = parametros.length;
     return new Promise((resolve, reject) => {
         if (cantArg != 0) {
             var enteros = ['stock', 'id', 'precio_unitario'];
-            query = query + ' WHERE '
-            parametros.forEach(element => {
-                var parametros = element.split('=');
-                if (cantArg - 1 > cont) {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "' AND ";
-                        cont++;
-                    } else {
-                        query = query + element + ' AND ';
-                        cont++;
-                    }
-                } else {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "'";
-                    } else {
-                        query = query + element + ' ';
-                    }
-                }
-            });
-        }
-        resolve(query);
-        reject(query)
-    })
-}
-
-
-function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = instrumentos.id_producto';
-    var cont = 0;
-    const cantArg = parametros.length;
-    return new Promise((resolve, reject) => {
-        if (cantArg != 0) {
-            var enteros = ['stock', 'id', 'precio_unitario'];
-            query = query + ' WHERE '
             parametros.forEach(element => {
                 var parametros = element.split('=');
                 if (cantArg - 1 > cont) {

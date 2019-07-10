@@ -159,138 +159,176 @@ function initIngreso(instanciaBD) {
         }
     */
 
-    /*
-        delete miObjeto.propiedad2;
-        delete miObjeto['propiedad2'];
-        // ó,
-        var prop = "propiedad2";
-        delete miObjeto[prop];
-    */
 
-    router.put('/update', (req, res) => {
+    //TODO: revisar esta
+    router.post('/update', (req, res) => {
         var errorArray = [];
         var idFails = [];
-        new Promise((resolve, reject) => {
-                req.body.data.forEach(element => {
-                    return conexion.transaction(t => {
-                            updateProducto(element, Productos, t).then(result => {
-                                    if (result) {
-                                        if (element.categoria = 1) {
-                                            var id = element.id;
-                                            delete element.id
-                                            return Equipos.update(element, {
-                                                    where: {
-                                                        id_producto: id
-                                                    },
-                                                    transaction: t,
-                                                    limit: 1,
-                                                    lock: true
-                                                }).then(() => {
-                                                    res.status(200);
-                                                })
-                                                .catch(() => {
-                                                    res.status(200);
-                                                    errorArray.push({
-                                                        'message': 'El Equipo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                                        'updated': false
-                                                    })
-                                                    idFails.push(id);
-                                                });
-                                        } else if (element.categoria = 2) {
-                                            var id = element.id;
-                                            delete element.id
-                                            return Insumos.update(element, {
-                                                    where: {
-                                                        id_producto: id
-                                                    },
-                                                    transaction: t,
-                                                    limit: 1,
-                                                    lock: true
-                                                }).then(() => {
-                                                    res.status(200);
-                                                })
-                                                .catch(() => {
-                                                    res.status(500);
-                                                    errorArray.push({
-                                                        'message': 'El Instrumento con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                                        'updated': false
-                                                    })
-                                                    idFails.push(id);
-                                                });
-                                        } else if (element.categoria = 3) {
-                                            var id = element.id;
-                                            delete element.id
-                                            return Instrumentos.update(req.body.dataUpdate, {
-                                                    where: {
-                                                        id_producto: id
-                                                    },
-                                                    transaction: t,
-                                                    limit: 1,
-                                                    lock: true
-                                                }).then(() => {
-                                                    res.status(200);
-                                                })
-                                                .catch(() => {
-                                                    res.status(200);
-                                                    errorArray.push({
-                                                        'message': 'El Insumo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                                        'updated': false
-                                                    })
-                                                    idFails.push(id);
-                                                });
-                                        }
-                                    } else {
-                                        errorArray.push({
-                                            'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                            'updated': false
-                                        });
-                                        idFails.push(element.id)
-                                    }
-                                })
-                                .catch(() => {
-                                    errorArray.push({
-                                        'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                        'updated': false
+        var promises = [];
+        var updateAll = true;
+        var promiseProducto = null;
+        var promiseEquipo = null;
+        var promiseInsumo = null;
+        try {
+            req.body.data.forEach(element => {
+                return conexion.transaction(t => {
+                    promiseProducto = updateProducto(element, Productos, t)
+                    promiseProducto.then(result => {
+                            if (result) {
+                                if (element.categoria = 1) {
+                                    var id = element.id;
+                                    delete element.id
+                                    promiseEquipo = Equipos.update(element, {
+                                        where: {
+                                            id_producto: id
+                                        },
+                                        transaction: t,
+                                        limit: 1,
+                                        lock: true
                                     });
-                                })
-                        })
-                        .then(() => {
-                            console.log('Transacción realizada');
+
+                                    promiseEquipo.catch(() => {
+                                        res.status(200);
+                                        errorArray.push({
+                                            'message': 'El Equipo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                            'updated': false
+                                        })
+                                        idFails.push(id);
+                                        updateAll = false;
+                                    });
+                                    promises.push(promiseEquipo);
+                                } else if (element.categoria = 2) {
+                                    var id = element.id;
+                                    delete element.id
+                                    promiseInsumo = Insumos.update(element, {
+                                        where: {
+                                            id_producto: id
+                                        },
+                                        transaction: t,
+                                        limit: 1,
+                                        lock: true
+                                    })
+
+                                    promiseInsumo.catch(() => {
+                                        res.status(500);
+                                        errorArray.push({
+                                            'message': 'El Instrumento con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                            'updated': false
+                                        })
+                                        idFails.push(id);
+                                        updateAll = false;
+                                    });
+                                    promises.push(promiseInsumo);
+                                } else if (element.categoria = 3) {
+                                    var id = element.id;
+                                    delete element.id
+                                    promiseInstrumento = Instrumentos.update(req.body.dataUpdate, {
+                                        where: {
+                                            id_producto: id
+                                        },
+                                        transaction: t,
+                                        limit: 1,
+                                        lock: true
+                                    })
+                                    promiseInstrumento
+                                        .catch(() => {
+                                            res.status(200);
+                                            errorArray.push({
+                                                'message': 'El Insumo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                                'updated': false
+                                            })
+                                            idFails.push(id);
+                                            updateAll = false;
+                                        });
+                                    promises.push(promiseInstrumento)
+                                }
+                            } else {
+                                errorArray.push({
+                                    'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                                    'updated': false
+                                });
+                                idFails.push(element.id)
+                                updateAll = false;
+                            }
                         })
                         .catch(() => {
                             errorArray.push({
                                 'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
                                 'updated': false
                             });
-                            idFails.push(element.id);
+                            updateAll = false;
                         })
-                });
-                resolve(true);
-                reject(false);
-            })
-            .then((resultOp) => {
-                if (resultOp) {
+                    promises.push(promiseProducto);
+                })
+            });
+        } catch (error) {
+            errorArray.push({
+                'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                'updated': false
+            });
+            idFails.push(element.id);
+        }
+
+        Promise.all(promises).then(() => {
+                if (updateAll) {
                     res.json({
-                        'message': 'Todos los productos se han ingresado con exito',
-                        'insertedAll': true,
-                        'idFails': []
-                    });
+                        'message': 'Todos los productos se han ingresado o se han actualizado con exito',
+                        'updateAll': true,
+                        'idFails': arrayError
+                    }).status(200);
                 } else {
                     res.json({
-                        'message': errorArray,
-                        'insertedAll': false,
-                        'idFails': idFails
-                    });
+                        'message': arrayMessage,
+                        'updateAll': false,
+                        'idFails': arrayError
+                    }).status(200)
                 }
             })
             .catch(() => {
-                res.json({
-                    'message': errorArray,
-                    'insertedAll': false,
-                    'idFails': idFails
-                });
-            });
+                setTimeout(() => {
+                    res.json({
+                        'message': "Error al enviar la cantidad de datos",
+                        'updateAll': false,
+                        'idFails': arrayError
+                    }).status(200)
+                }, 10)
+            })
     });
+
+    router.delete('/producto/delete/:idproducto', (req, res) => {
+        try {
+            return conexion.transaction(t => {
+                    return Productos.update({
+                        activo: false
+                    }, {
+                        where: {
+                            id_producto: req.params.idproducto
+                        },
+                        transaction: t,
+                        limit: 1,
+                        lock: true
+                    }).then(() => {
+                        return ({
+                            'message': 'El producto fue borrado de manera correcta',
+                            'deleted': true
+                        })
+                    })
+                })
+                .then(valor => {
+                    res.json(valor)
+                });
+        } catch (error) {
+            res.json({
+                'message': 'El producto no fue borrado, vuelva a intentarlo y revise los datos enviados',
+                'deleted': false
+            })
+        }
+    })
+
+
+
+
+
     return router;
 }
 
@@ -324,91 +362,14 @@ return Productos.findOrCreate({
     )
 */
 
-function insertEquipos(parametros, Equipos, Productos, transaction) {
-    return Equipos.findOne({
-        where: {
-            id_producto: parametros.id
-        }
-    }, {
-        transaction: transaction
-    }).then(result => {
-        if (result) {
-            parametros.stock = result.stock + parametros.stock;
-            return result.update(parametros, {
-                transaction: transaction,
-                limit: 1,
-                lock: true
-            }).then(result => {
-                return Productos.update(parametros, {
-                    where: {
-                        id: parametros.id
-                    },
-                    transaction: transaction,
-                    limit: 1,
-                    lock: true
-                });
-            });
-        } else {
-            return Productos.create(parametros, {
-                transaction: transaction
-            }).then(() => {
-                return Equipos.create({
-                    id_producto: parametros.id,
-                    marca: parametros.marca,
-                    observacion: parametros.observacion,
-                    estado: parametros.estado,
-                    stock: parametros.stock
-                }, {
-                    transaction: transaction
-                })
-            })
-        }
-    })
-
-}
-
-function insertInsumos(parametros, Insumos, t) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function () {
-            var val = Insumos.create({
-                id_producto: parametros.id,
-                fecha_caducidad: parametros.fecha_caducidad
-            }, {
-                transaction: t
-            }).then(
-                resolve(val)
-            ).catch((error) => {
-                reject(val);
-            })
-        }, 250);
-    });
-}
-
-function insertInstrumentos(parametros, Instrumentos, t) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function () {
-            var val = Instrumentos.create({
-                id_producto: parametros.id,
-                observacion: parametros.observacion,
-                estado: parametros.estado,
-                stock: parametros.stock
-            }, {
-                transaction: t
-            }).then(
-                resolve(val)
-            ).catch((error) => {
-                reject(val);
-            })
-        }, 250);
-    });
-}
 
 function updateProducto(updateData, Productos, transaction) {
-    return new Promise((resolve, reject) => {
-        setTimeout(function () {
-            var categorias = ['Equipo', 'Insumo', 'Instrumento'];
-            updateData.categoria = categorias[updateData.categoria - 1];
-            Productos.update(updateData, {
+    try {
+        return new Promise((resolve, reject) => {
+            setTimeout(function () {
+                var categorias = ['Equipo', 'Insumo', 'Instrumento'];
+                updateData.categoria = categorias[updateData.categoria - 1];
+                Productos.update(updateData, {
                     where: {
                         id: req.params.id
                     },
@@ -418,10 +379,9 @@ function updateProducto(updateData, Productos, transaction) {
                 }).then(() => {
                     resolve(true);
                 })
-                .catch(() => {
-                    reject(false);
-                })
-        }, 250);
-
-    })
+            }, 80);
+        })
+    } catch (error) {
+        reject(false);
+    }
 }

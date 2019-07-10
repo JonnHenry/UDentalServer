@@ -25,9 +25,18 @@ module.exports = function (sequelize) {
             onUpdate: 'CASCADE'
         },
         categoria:{
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM('Equipo', 'Insumo', 'Instrumento'),
             allowNull: false,
             onUpdate: 'CASCADE'
+        },
+        activo:{
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: true
+        },
+        stock: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         fecha_creacion: {
             type: DataTypes.DATEONLY,
@@ -43,15 +52,11 @@ module.exports = function (sequelize) {
     }, {
         indexes: [{
                 unique: false,
-                fields: ['fecha_creacion']
+                fields: ['fecha_creacion','nombre']
             },
             {
                 unique: false,
-                fields: ['fecha_actualizacion']
-            },
-            {
-                unique: false,
-                fields: ['nombre']
+                fields: ['fecha_actualizacion','nombre']
             }
         ],
         updatedAt: 'fecha_actualizacion',

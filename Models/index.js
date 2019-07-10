@@ -9,7 +9,7 @@ module.exports = function (sequelize) {
     const Tratamientos = require('./Tratamientos')(sequelize);
     const InventariosControl = require('./InventariosControl')(sequelize);
     const InventariosEntrega = require('./InventariosEntrega')(sequelize);
-    const TratamientoProductos = require('./Productos')(sequelize);
+    const TratamientoProductos = require('./TratamientoProductos')(sequelize);
     const InventariosProductos = require('./Inventario_Productos')(sequelize);
 
     return {

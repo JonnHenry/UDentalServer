@@ -20,10 +20,6 @@ module.exports = function (sequelize) {
         estado: {
             type: DataTypes.ENUM('Dañado', 'Buen estado', 'Reparación'),
             allowNull: false
-        },
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     }, {
         indexes: [{

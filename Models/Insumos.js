@@ -16,10 +16,6 @@ module.exports = function(sequelize){
         fecha_caducidad: {
             type: DataTypes.DATEONLY,
             allowNull: false
-        }, 
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     },{
         indexes: [{
