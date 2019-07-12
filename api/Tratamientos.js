@@ -1,3 +1,5 @@
+
+
 var express = require('express');
 var router = express.Router();
 
@@ -203,7 +205,7 @@ function initTratamientos(instanciaBD) {
         }
     });
     /*TODO: falta de agregar y scara de un inventario un tratamiento tomar en cuenrta los insumos que ya no van a 
-        servir xq son de un solo uso
+        servir xq son de un solo uso se debe de poner de una maner que se pueda arreglar esto
     */
 
 
