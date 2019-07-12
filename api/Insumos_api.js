@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 /*
@@ -14,7 +13,7 @@ function initInsumos(instanciaBD) {
     //  Obtener todos los insumos
 
     router.get('/all', (req, res) => {
-        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, fecha_creacion, categoria, fecha_actualizacion, fecha_caducidad FROM insumos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true")
+        return conexion.query("SELECT id, nombre, descripcion, precio_unitario, stock, fecha_creacion, fecha_actualizacion FROM insumos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true")
             .then(([results, metadata]) => {
                 res.json({
                     "error": false,
@@ -39,27 +38,24 @@ function initInsumos(instanciaBD) {
     */
 
     //Obtener los insumos con varios parametros
-    router.get('/find', (req, res) => {
-        createQuery(req.body).then(query => {
+    router.post('/find', (req, res) => {
+        createQuery(req.body.colAndValueSearch).then(query => {
             return conexion.transaction(t => {
-                    return conexion.query(query, {
-                            transaction: t,
-                            limit: 1,
-                            lock: true,
-                            raw: true
-                        })
+                    return conexion.query(query)
                         .then(([results, metadata]) => {
                             res.status(200);
                             return ({
                                 "error": false,
+                                "message": "Se econtraron valores para los criterios de busqueda",
                                 "data": results
                             });
                         })
                         .catch(err => {
                             res.status(500);
                             return ({
-                                message: 'Error, vuelva a intentarlo.',
-                                inserted: false
+                                "message": 'Error, vuelva a intentarlo y revise los campos ingresados.',
+                                "error": true,
+                                "data": []
                             })
                         })
                 })
@@ -74,7 +70,12 @@ function initInsumos(instanciaBD) {
         Formato del objeto JSON a enviar
         {
             "dataUpdate": {
-                "nombre": "Instrumento de prueba 1", cualquier otro campo que tenga instrumentos
+                "id": 3,
+                "nombre": "Instrumento",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 9999.99,
+                "stock": 1,
+	            "fecha_caducidad": "2019-05-22"
             }
         }
     */
@@ -122,7 +123,7 @@ function initInsumos(instanciaBD) {
 
 
 function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true ';
+    var query = "SELECT id, nombre, descripcion, precio_unitario, stock, fecha_creacion, fecha_actualizacion FROM insumos JOIN productos ON productos.id = insumos.id_producto WHERE productos.activo=true";
     var cont = 0;
     const cantArg = parametros.length;
     return new Promise((resolve, reject) => {
@@ -130,22 +131,12 @@ function createQuery(parametros) {
             var enteros = ['stock', 'id', 'precio_unitario'];
             parametros.forEach(element => {
                 var parametros = element.split('=');
-                if (cantArg - 1 > cont) {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "' AND ";
-                        cont++;
-                    } else {
-                        query = query + element + ' AND ';
-                        cont++;
-                    }
+                if (!enteros.includes(parametros[0])) {
+                    query = query +" AND " +parametros[0] + "='" + parametros[1] +"'";
+                    cont++;
                 } else {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "'";
-                    } else {
-                        query = query + element + ' ';
-                    }
+                    query = query + ' AND '+element;
+                    cont++;
                 }
             });
         }

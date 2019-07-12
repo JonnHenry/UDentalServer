@@ -1,5 +1,3 @@
-
-
 var express = require('express');
 var router = express.Router();
 /*
@@ -40,22 +38,24 @@ function initInstrumentos(instanciaBD) {
     */
 
     //Obtener los instrumentos con varios parametros
-    router.get('/find', (req, res) => {
-        createQuery(req.body).then(query => {
+    router.post('/find', (req, res) => {
+        createQuery(req.body.colAndValueSearch).then(query => {
             return conexion.transaction(t => {
                     return conexion.query(query)
                         .then(([results, metadata]) => {
                             res.status(200);
                             return ({
                                 "error": false,
+                                "message": "Se econtraron valores para los criterios de busqueda",
                                 "data": results
                             });
                         })
                         .catch(err => {
                             res.status(500);
                             return ({
-                                message: 'Error, vuelva a intentarlo.',
-                                inserted: false
+                                "message": 'Error, vuelva a intentarlo y revise los campos ingresados.',
+                                "error": true,
+                                "data": []
                             })
                         })
                 })
@@ -72,7 +72,14 @@ function initInstrumentos(instanciaBD) {
         Formato del objeto JSON a enviar
         {
             "dataUpdate": {
-                "nombre": "Equipo de prueba 1", cualquier otro campo que tenga instrumentos
+                "id": 1,
+                "nombre": "Equipo de prueba",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 9999.99,
+                "marca": "Honda",
+                "observacion": "No existe observación",
+                "estado": "Buen estado",
+                "stock": 1
             }
         }
     */
@@ -119,30 +126,17 @@ function initInstrumentos(instanciaBD) {
 
 
 function createQuery(parametros) {
-    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = instrumentos.id_producto WHERE productos.activo=true ';
-    var cont = 0;
+    var query = 'SELECT id, nombre, descripcion, observacion, precio_unitario, stock, estado, fecha_creacion, fecha_actualizacion FROM instrumentos JOIN productos ON productos.id = instrumentos.id_producto WHERE productos.activo=true';
     const cantArg = parametros.length;
     return new Promise((resolve, reject) => {
         if (cantArg != 0) {
             var enteros = ['stock', 'id', 'precio_unitario'];
             parametros.forEach(element => {
                 var parametros = element.split('=');
-                if (cantArg - 1 > cont) {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "' AND ";
-                        cont++;
-                    } else {
-                        query = query + element + ' AND ';
-                        cont++;
-                    }
+                if (!enteros.includes(parametros[0])) {
+                    query = query +" AND " +parametros[0] + "='" + parametros[1] +"'";
                 } else {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "'";
-                    } else {
-                        query = query + element + ' ';
-                    }
+                    query = query + ' AND '+element;
                 }
             });
         }

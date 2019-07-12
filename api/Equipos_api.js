@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 
@@ -27,14 +26,13 @@ function initEquipos(instanciaBD) {
             })
     });
 
+
     /*
         El objeto a enviar debe de ser de esta manera
         {
-            colAndValueSearch: ['col=value'],---> tipo string
+            colAndValueSearch: ['col=value']---> tipo string
         }
     */
-
-    //Obtener los equipos con 
     router.post('/find', (req, res) => {
         createQuery(req.body.colAndValueSearch).then(querySearch => {
             return conexion.query(querySearch)
@@ -113,22 +111,12 @@ function createQuery(parametros) {
             var enteros = ['stock', 'id', 'precio_unitario'];
             parametros.forEach(element => {
                 var parametros = element.split('=');
-                if (cantArg - 1 > cont) {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "' AND ";
-                        cont++;
-                    } else {
-                        query = query + element + ' AND ';
-                        cont++;
-                    }
+                if (!enteros.includes(parametros[0])) {
+                    query = query +" AND " +parametros[0] + "='" + parametros[1] +"'";
+                    cont++;
                 } else {
-                    var parametros = element.split('=');
-                    if (!enteros.includes(parametros[0])) {
-                        query = query + parametros[0] + "='" + parametros[1] + "'";
-                    } else {
-                        query = query + element + ' ';
-                    }
+                    query = query + ' AND '+element;
+                    cont++;
                 }
             });
         }

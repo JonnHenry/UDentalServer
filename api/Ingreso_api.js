@@ -122,6 +122,10 @@ function initIngreso(instanciaBD) {
             })
     });
 
+
+
+
+
     /*
         JSON a enviar 
         {
@@ -159,6 +163,73 @@ function initIngreso(instanciaBD) {
         }
     */
 
+    /*
+        Ejemplo de como enviar los datos
+        {
+        "data": [{
+                "categoria": 1,
+                "id": 1,
+                "nombre": "Equipo de prueba",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 9.99,
+                "marca": "Honda",
+                "observacion": "No existe observación",
+                "estado": "Buen estado",
+                "stock": 10
+            },
+            {
+                "categoria": 1,
+                "id": 2,
+                "nombre": "Equipo de prueba",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 99.99,
+                "marca": "Honda",
+                "observacion": "No existe observación",
+                "estado": "Buen estado",
+                "stock": 10
+            },
+            {
+                "categoria": 2,
+                "id": 3,
+                "nombre": "Instrumento",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 99.99,
+                "stock": 10,
+                "fecha_caducidad": "2019-05-22"
+            },
+            {
+                "categoria": 2,
+                "id": 4,
+                "nombre": "Instrumento",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 99.99,
+                "stock": 10,
+                "fecha_caducidad": "2019-05-22"
+            },
+            {
+                "categoria": 3,
+                "id": 5,
+                "nombre": "Insumo de prueba",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 85.69,
+                "observacion": "No existe observación",
+                "estado": "Buen estado",
+                "stock": 10
+            },
+            {
+                "categoria": 3,
+                "id": 6,
+                "nombre": "Insumo de prueba",
+                "descripcion": "No existe descripción",
+                "precio_unitario": 85.69,
+                "observacion": "No existe observación",
+                "estado": "Buen estado",
+                "stock": 10
+            }
+        ]
+    }
+    */
+
 
     //TODO: revisar esta
     router.post('/update', (req, res) => {
@@ -169,8 +240,9 @@ function initIngreso(instanciaBD) {
         var promiseProducto = null;
         var promiseEquipo = null;
         var promiseInsumo = null;
-        try {
-            req.body.data.forEach(element => {
+
+        req.body.data.forEach(element => {
+            try {
                 return conexion.transaction(t => {
                     promiseProducto = updateProducto(element, Productos, t)
                     promiseProducto.then(result => {
@@ -197,6 +269,7 @@ function initIngreso(instanciaBD) {
                                         updateAll = false;
                                     });
                                     promises.push(promiseEquipo);
+                                    return promiseEquipo;
                                 } else if (element.categoria = 2) {
                                     var id = element.id;
                                     delete element.id
@@ -219,10 +292,11 @@ function initIngreso(instanciaBD) {
                                         updateAll = false;
                                     });
                                     promises.push(promiseInsumo);
+                                    return promiseInsumo;
                                 } else if (element.categoria = 3) {
                                     var id = element.id;
                                     delete element.id
-                                    promiseInstrumento = Instrumentos.update(req.body.dataUpdate, {
+                                    promiseInstrumento = Instrumentos.update(element, {
                                         where: {
                                             id_producto: id
                                         },
@@ -241,6 +315,7 @@ function initIngreso(instanciaBD) {
                                             updateAll = false;
                                         });
                                     promises.push(promiseInstrumento)
+                                    return promiseInstrumento
                                 }
                             } else {
                                 errorArray.push({
@@ -259,28 +334,30 @@ function initIngreso(instanciaBD) {
                             updateAll = false;
                         })
                     promises.push(promiseProducto);
+                    return promiseProducto
                 })
-            });
-        } catch (error) {
-            errorArray.push({
-                'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                'updated': false
-            });
-            idFails.push(element.id);
-        }
+            } catch (error) {
+                errorArray.push({
+                    'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
+                    'updated': false
+                });
+                idFails.push(element.id);
+            }
+        });
+
 
         Promise.all(promises).then(() => {
                 if (updateAll) {
                     res.json({
                         'message': 'Todos los productos se han ingresado o se han actualizado con exito',
                         'updateAll': true,
-                        'idFails': arrayError
+                        'idFails': idFails
                     }).status(200);
                 } else {
                     res.json({
                         'message': arrayMessage,
                         'updateAll': false,
-                        'idFails': arrayError
+                        'idFails': idFails
                     }).status(200)
                 }
             })
@@ -302,7 +379,7 @@ function initIngreso(instanciaBD) {
                         activo: false
                     }, {
                         where: {
-                            id_producto: req.params.idproducto
+                            id: req.params.idproducto
                         },
                         transaction: t,
                         limit: 1,
@@ -371,7 +448,7 @@ function updateProducto(updateData, Productos, transaction) {
                 updateData.categoria = categorias[updateData.categoria - 1];
                 Productos.update(updateData, {
                     where: {
-                        id: req.params.id
+                        id: updateData.id
                     },
                     transaction: transaction,
                     limit: 1,
