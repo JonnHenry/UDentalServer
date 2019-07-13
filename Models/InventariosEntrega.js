@@ -6,12 +6,25 @@ module.exports = function (sequelize) {
         id_inventario: {
             type: DataTypes.BIGINT,
             primaryKey: true,
-            unique: true,
             allowNull: false,
             references: {
                 model: 'inventarios',
                 key: 'id'
             }
+        },
+        id_producto: {
+            type: DataTypes.BIGINT,
+            primaryKey: true,
+            allowNull: false,
+            references: {
+                model: 'productos',
+                key: 'id'
+            }
+        },
+        fecha: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            primaryKey: true
         },
         persona_entrega: {
             type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
@@ -19,6 +32,10 @@ module.exports = function (sequelize) {
         },
         persona_recibe: {
             type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
+            allowNull: false
+        },
+        cantidad:{
+            type: DataTypes.BIGINT,
             allowNull: false
         }
     }, {

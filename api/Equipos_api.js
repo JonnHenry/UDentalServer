@@ -20,8 +20,8 @@ function initEquipos(instanciaBD) {
             })
             .catch(err => {
                 res.json({
-                    message: 'Error, vuelva a intentarlo.',
-                    inserted: false
+                    "error": true,
+                    "data": []
                 }).status(500);
             })
     });
@@ -30,7 +30,7 @@ function initEquipos(instanciaBD) {
     /*
         El objeto a enviar debe de ser de esta manera
         {
-            colAndValueSearch: ['col=value']---> tipo string
+            colAndValueSearch: ['col=value''nombre=Prueba', 'stock=10',]---> tipo string
         }
     */
     router.post('/find', (req, res) => {

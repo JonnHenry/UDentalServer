@@ -16,12 +16,17 @@ module.exports = function(sequelize){
         persona_realiza: {
             type: DataTypes.STRING, //Es la cedula para poder identificar a la persona
             allowNull: false
+        },
+        fecha_creacion: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
         }
     },{
         indexes: [{
             unique: false,
             fields: ['persona_realiza']
         }],
+        createdAt: 'fecha_creacion',
         modelName: 'inventario_controles',
         timestamps: false
     });

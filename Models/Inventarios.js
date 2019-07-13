@@ -17,21 +17,17 @@ module.exports = function (sequelize) {
             allowNull: true,
             defaultValue: "Ninguna"
         },
-        fecha_creacion: {
-            type: 'TIMESTAMP'
-        },
-        fecha_actualizacion: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        observacion: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            defaultValue: "Ninguna"
         }
     }, {
         indexes: [{
                 unique: false,
-                fields: ['fecha_creacion','nombre']
+                fields: ['nombre']
             }
         ],
-        updatedAt: 'fecha_creacion',
-        createdAt: 'fecha_actualizacion',
         modelName: 'inventarios',
         timestamps: false
     });

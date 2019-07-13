@@ -59,7 +59,7 @@ function initIngreso(instanciaBD) {
                 promiseEquipo.then(([results, metadata]) => {
                         if (!results[0].create_or_update_equipo) {
                             arrayError.push(parametros.id)
-                            arrayMessage.push('Equipo ' + parametros.id + ' ya esta ingresado.')
+                            arrayMessage.push('Equipo ' + parametros.id + ' ya ingresado.')
                         }
                     })
                     .catch(() => {
@@ -72,12 +72,12 @@ function initIngreso(instanciaBD) {
                 promiseInsumo.then(([results, metadata]) => {
                         if (!results[0].create_or_update_insumo) {
                             arrayError.push(parametros.id)
-                            arrayMessage.push('Equipo ' + parametros.id + ' ya ingresado.')
+                            arrayMessage.push('Insumo ' + parametros.id + ' ya ingresado.')
                         }
                     })
                     .catch(() => {
                         arrayError.push(parametros.id)
-                        arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
+                        arrayMessage.push('Insumo ' + parametros.id + ' no ingresado.')
                     })
                 promises.push(promiseInsumo)
             } else if (parametros.categoria == 3) {
@@ -85,12 +85,12 @@ function initIngreso(instanciaBD) {
                 promiseInstrumento.then(([results, metadata]) => {
                         if (!results[0].create_or_update_instrumento) {
                             arrayError.push(parametros.id)
-                            arrayMessage.push('Equipo ' + parametros.id + ' ya ingresado.')
+                            arrayMessage.push('Instrumento ' + parametros.id + ' ya ingresado.')
                         }
                     })
                     .catch(() => {
                         arrayError.push(parametros.id)
-                        arrayMessage.push('Equipo ' + parametros.id + ' no ingresado.')
+                        arrayMessage.push('Instrumento ' + parametros.id + ' no ingresado.')
                     })
             }
             promises.push(promiseInstrumento)

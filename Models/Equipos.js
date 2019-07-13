@@ -23,13 +23,11 @@ module.exports = function (sequelize) {
         },
         estado: {
             type: DataTypes.ENUM('Dañado', 'Buen estado', 'Reparación'),
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'Buen estado'
         }
     },{ 
-        indexes: [{
-                unique: false,
-                fields: ['marca']
-            },
+        indexes: [
             {
                 unique: false,
                 fields: ['estado']

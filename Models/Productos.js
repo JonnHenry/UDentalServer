@@ -53,10 +53,6 @@ module.exports = function (sequelize) {
         indexes: [{
                 unique: false,
                 fields: ['fecha_creacion','nombre']
-            },
-            {
-                unique: false,
-                fields: ['fecha_actualizacion','nombre']
             }
         ],
         updatedAt: 'fecha_actualizacion',
