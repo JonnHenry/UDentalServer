@@ -46,7 +46,7 @@ function initIngreso(instanciaBD) {
                     estado: 'Dañado'||'Buen Estado'||'Reparación',
                     stock: Entero
                 }
-            ]
+            
         }
     */
 
@@ -54,7 +54,7 @@ function initIngreso(instanciaBD) {
         var arrayError = [];
         var arrayMessage = [];
         var promises = [];
-        req.body.forEach(parametros => {
+        req.body.data.forEach(parametros => {
             if (parametros.categoria == 1) {
                 var promiseEquipo = conexion.query("SELECT create_or_update_equipo(" + parametros.id + ",'" + parametros.nombre + "','" + parametros.descripcion + "'," + parametros.precio_unitario + ", '" + parametros.marca + "','" + parametros.observacion + "','" + parametros.estado + "'," + parametros.stock + ");");
                 promiseEquipo.then(([results, metadata]) => {
@@ -184,7 +184,6 @@ function initIngreso(instanciaBD) {
                 "nombre": "Equipo de prueba",
                 "descripcion": "No existe descripción",
                 "precio_unitario": 99.99,
-                "marca": "Honda",
                 "observacion": "No existe observación",
                 "estado": "Buen estado",
                 "stock": 10
@@ -231,8 +230,6 @@ function initIngreso(instanciaBD) {
     }
     */
 
-
-    //TODO: revisar esta
     router.post('/update', (req, res) => {
         var errorArray = [];
         var idFails = [];
