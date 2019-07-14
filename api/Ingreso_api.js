@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+//TODO: Ya ingresado
 function initIngreso(instanciaBD) {
     var Productos = instanciaBD.Productos;
     var Insumos = instanciaBD.Insumos;
