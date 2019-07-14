@@ -125,6 +125,29 @@ function initInventarios(instanciaBD) {
 
         }
     });
+    //SELECT DISTINCT id_inventario,nombre,descripcion,observacion from inventario_entregas JOIN inventarios ON inventarios.id = inventario_entregas.id_inventario; 
+    router.get('/entrega/all', (req, res) => {
+        try {
+            return conexion.query("SELECT DISTINCT id_inventario,nombre,descripcion,observacion from inventario_entregas JOIN inventarios ON inventarios.id = inventario_entregas.id_inventario;")
+                .then(([results, metadata]) => {
+                    res.json({
+                        error: false,
+                        data: results
+                    }).status(200);
+                })
+                .catch(err => {
+                    res.json({
+                        error: false,
+                        data: []
+                    }).status(200);
+                })
+        } catch (error) {
+            res.json({
+                error: false,
+                data: []
+            }).status(500);
+        }
+    });
 
     router.get('/entrega/produtos/all', (req, res) => {
         try {

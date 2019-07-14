@@ -1,5 +1,3 @@
-
-
 var express = require('express');
 var router = express.Router();
 
@@ -27,9 +25,7 @@ function initTratamientos(instanciaBD) {
             }
         */
         try {
-            console.log(req.body);
-            
-            return conexion.query("SELECT ingreso_tratamiento('" + req.body.nombre + "'," + req.body.precio + ",'" + req.body.descripcion + "','" +JSON.stringify(req.body.productos) + "');")
+            return conexion.query("SELECT ingreso_tratamiento('" + req.body.nombre + "'," + req.body.precio + ",'" + req.body.descripcion + "','" + JSON.stringify(req.body.productos) + "');")
                 .then(([results, metadata]) => {
                     res.json({
                         'message': 'El tratamiento se ha ingresado con exito',
@@ -50,15 +46,10 @@ function initTratamientos(instanciaBD) {
         }
     });
 
-
-
-
-
-
     router.get('/all', (req, res) => {
         try {
             return conexion.query("SELECT id, nombre, precio, descripcion, fecha_creacion,fecha_actualizacion FROM tratamientos WHERE activo=true")
-                .then(([results, metadata])=> {
+                .then(([results, metadata]) => {
                     res.json({
                         "error": false,
                         "data": results
@@ -105,14 +96,15 @@ function initTratamientos(instanciaBD) {
                 "data": []
             }).status(500);
         }
-
     })
 
     //Para poner en estado inactivo un tratamiento pero no se borra
     router.delete('/delete/:id', (req, res) => {
         try {
             return conexion.transaction(t => {
-                    return Tratamientos.update({activo: false}, {
+                    return Tratamientos.update({
+                        activo: false
+                    }, {
                         where: {
                             id: req.params.id
                         },
@@ -132,7 +124,7 @@ function initTratamientos(instanciaBD) {
         } catch (error) {
             res.json({
                 'message': 'El tratamiento no fue borrado, vuelva a intentarlo y revise los datos enviados',
-                'deleted': false 
+                'deleted': false
             })
         }
     })
@@ -146,7 +138,7 @@ function initTratamientos(instanciaBD) {
             id_producto: 1
         }*/
         try {
-            return conexion.query("DELETE FROM tratamiento_productos where id_tratamiento="+req.body.id_tratamiento+" AND id_producto="+req.body.id_producto)
+            return conexion.query("DELETE FROM tratamiento_productos where id_tratamiento=" + req.body.id_tratamiento + " AND id_producto=" + req.body.id_producto)
                 .then(([results, metadata]) => {
                     res.json({
                         'message': 'El productos se ha eliminado del tratamiento con exito',
@@ -168,8 +160,8 @@ function initTratamientos(instanciaBD) {
     });
 
 
-    router.post('/update',(req,res)=>{
-         /*{
+    router.post('/update', (req, res) => {
+        /*{
             Formato JSON a enviar
             id_tratamiento:1,
             id_producto: 1,
@@ -178,11 +170,11 @@ function initTratamientos(instanciaBD) {
         try {
             return conexion.transaction(t => {
                     return TratamientoProductos.update({
-                            cantidad_producto: req.body.cantidad_producto
-                        }, {
+                        cantidad_producto: req.body.cantidad_producto
+                    }, {
                         where: {
                             id_tratamiento: req.body.id_tratamiento,
-                            id_producto:req.body.id_producto
+                            id_producto: req.body.id_producto
                         },
                         transaction: t,
                         limit: 1,
@@ -200,15 +192,65 @@ function initTratamientos(instanciaBD) {
         } catch (error) {
             res.json({
                 'message': 'El tratamiento no fue actualizado, vuelva a intentarlo y revise los datos enviados',
-                'deleted': false 
+                'deleted': false
             })
         }
     });
-    /*TODO: falta de agregar y scara de un inventario un tratamiento tomar en cuenrta los insumos que ya no van a 
-        servir xq son de un solo uso se debe de poner de una maner que se pueda arreglar esto
-    */
 
+    router.post('/inicia_tratamiento/:id', (req, res) => {
+        try {
+            return conexion.query("SELECT inicia_tratamiento(" + req.params.id + ")")
+                .then(([results, metadata]) => {
+                    res.json({
+                        "message": 'El tratamiento se ha iniciado.',
+                        "error": false
+                    }).status(200);
+                })
+                .catch(err => {
+                    res.json({
+                        'message': 'El tratamiento no se ha iniciado.',
+                        "error": true
+                    }).status(200);
+                })
+        } catch (error) {
+            res.json({
+                'message': 'El tratamiento no se ha iniciado.',
+                "error": true
+            }).status(500);
+        }
+    })
 
+    router.post('/termina_tratamiento', (req, res) => {
+        /*
+            Se debde de enviar el JSON de la siguiente manera
+            {
+                "id_tratamiento": 1,
+                "inservible": [1,2,3,4,5] //Representa los insumo que ya no sirven o fueron desechados de una manera en
+                que ya no se pueden usar y son eliminados para siempre
+            }
+        */
+        try {
+            console.log(req.body.insumos_desechados);
+            return conexion.query("SELECT termina_tratamiento(" + req.body.id_tratamiento +","+ "'{"+req.body.inservible+"}'"+")")
+                .then(([results, metadata]) => {
+                    res.json({
+                        "message": 'El tratamiento se ha terminado de manera correcta.',
+                        "error": false
+                    }).status(200);
+                })
+                .catch(err => {
+                    res.json({
+                        'message': 'El tratamiento no se ha terminado de manera correcta.',
+                        "error": true
+                    }).status(200);
+                })
+        } catch (error) {
+            res.json({
+                'message': 'El tratamiento no se ha terminado de manera correcta.',
+                "error": true
+            }).status(500);
+        }
+    })
     return router;
 
 }

@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
 
 //postgres://vemqjijm:0j1siCgvszEiwg6E4LLBjELw-yw3qWPx@raja.db.elephantsql.com:5432/vemqjijm
 //'pruebas', 'admin', '123456789','localhost'
-conexion('pruebas', 'admin', '123456789','localhost').then(result => {
+conexion('postgres://vemqjijm:0j1siCgvszEiwg6E4LLBjELw-yw3qWPx@raja.db.elephantsql.com:5432/vemqjijm').then(result => {
   apiUse(result, app).then(conect => {
     if (conect) {
       console.log('La conexión es correcta');
