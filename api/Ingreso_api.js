@@ -401,6 +401,38 @@ function initIngreso(instanciaBD) {
     })
 
 
+    router.delete('/producto/restore/:idproducto', (req, res) => {
+        try {
+            return conexion.transaction(t => {
+                    return Productos.update({
+                        activo: true
+                    }, {
+                        where: {
+                            id: req.params.idproducto
+                        },
+                        transaction: t,
+                        limit: 1,
+                        lock: true
+                    }).then(() => {
+                        return ({
+                            'message': 'El producto fue borrado de manera correcta',
+                            'deleted': true
+                        })
+                    })
+                })
+                .then(valor => {
+                    res.json(valor)
+                });
+        } catch (error) {
+            res.json({
+                'message': 'El producto no fue borrado, vuelva a intentarlo y revise los datos enviados',
+                'deleted': false
+            })
+        }
+    })
+
+
+
 
 
 
