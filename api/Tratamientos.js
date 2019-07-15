@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 
-//TODO: Me quede aqui no esta hecho ninguno
+
 
 function initTratamientos(instanciaBD) {
     var Tratamientos = instanciaBD.Tratamientos;
     var TratamientoProductos = instanciaBD.TratamientoProductos;
     var conexion = instanciaBD.conexionBD;
+    
     router.post('/new', (req, res) => {
         /*
         JSON que debe de llegar
@@ -17,11 +18,11 @@ function initTratamientos(instanciaBD) {
                 descripcion: 'Descripcion del tratamiento',
                 productos:[
                     {
-                        id: ID_del_producto(equipo,insumo,instrumento),
+                        id_producto: ID_del_producto(equipo,insumo,instrumento),
                         cantidad: cantidad_que_ocupa
                     },
                     {
-                        id: ID_del_producto(equipo,insumo,instrumento),
+                        id_producto: ID_del_producto(equipo,insumo,instrumento),
                         cantidad: cantidad_que_ocupa
                     }
                 ]
@@ -30,10 +31,17 @@ function initTratamientos(instanciaBD) {
         try {
             return conexion.query("SELECT ingreso_tratamiento('" + req.body.nombre + "'," + req.body.precio + ",'" + req.body.descripcion + "','" + JSON.stringify(req.body.productos) + "');")
                 .then(([results, metadata]) => {
-                    res.json({
-                        'message': 'El tratamiento se ha ingresado con exito',
-                        "error": false
-                    }).status(200);
+                    if (results[0].ingreso_tratamiento) {
+                        res.json({
+                            'message': 'El tratamiento se ha ingresado con exito',
+                            "error": false
+                        }).status(200);
+                    } else {
+                        res.json({
+                            'message': 'El tratamiento se ha ingresado con exito',
+                            "error": true
+                        }).status(200);
+                    }
                 })
                 .catch(() => {
                     res.json({
@@ -48,6 +56,53 @@ function initTratamientos(instanciaBD) {
             }).status(500);
         }
     });
+
+    router.post('/productos/new', (req, res) => {
+        /*
+        JSON que debe de llegar
+            {
+                id_tratamiento: 1,
+                productos:[
+                    {
+                        id_producto: ID_del_producto(equipo,insumo,instrumento),
+                        cantidad: cantidad_que_ocupa
+                    },
+                    {
+                        id_producto: ID_del_producto(equipo,insumo,instrumento),
+                        cantidad: cantidad_que_ocupa
+                    }
+                ]
+            }
+        */
+        try {
+            return conexion.query("SELECT ingreso_productos_tratamiento('" + req.body.id_tratamiento + "','" + JSON.stringify(req.body.productos) + "');")
+                .then(([results, metadata]) => {
+                    if (results[0].ingreso_tratamiento) {
+                        res.json({
+                            'message': 'El tratamiento se ha actualizado con exito',
+                            "error": false
+                        }).status(200);
+                    } else {
+                        res.json({
+                            'message': 'El tratamiento no se ha actualizado, verifique la información enviada',
+                            "error": true
+                        }).status(200);
+                    }
+                })
+                .catch(() => {
+                    res.json({
+                        'message': 'El tratamiento no se ha actualizado, verifique la información enviada',
+                        "error": true
+                    }).status(200);
+                })
+        } catch (error) {
+            res.json({
+                'message': 'El tratamiento no se ha actualizado, verifique la información enviada',
+                "error": true
+            }).status(500);
+        }
+    });
+
 
     router.get('/all', (req, res) => {
         try {
@@ -132,9 +187,8 @@ function initTratamientos(instanciaBD) {
         }
     })
 
-    //DELETE FROM tratamiento_productos where id_tratamiento=1 AND id_producto=1 ;
 
-    router.delete('/productos/delete/', (req, res) => {
+    router.delete('/productos/delete', (req, res) => {
         /*{
             Formato JSON a enviar
             id_tratamiento:1,
@@ -145,79 +199,51 @@ function initTratamientos(instanciaBD) {
                 .then(([results, metadata]) => {
                     res.json({
                         'message': 'El productos se ha eliminado del tratamiento con exito',
-                        "error": false
+                        "deleted": false
                     }).status(200);
                 })
                 .catch(err => {
                     res.json({
                         'message': 'No se ha eliminado el producto del tratamientos',
-                        "error": true
+                        "deleted": true
                     }).status(200);
                 })
         } catch (error) {
             res.json({
                 'message': 'Error, revise los paramentros enviados',
-                "error": true
+                "deleted": true
             }).status(500);
         }
     });
 
 
-    router.post('/update', (req, res) => {
-        /*{
-            Formato JSON a enviar
-            id_tratamiento:1,
-            id_producto: 1,
-            cantidad: 5
-        }*/
-        try {
-            return conexion.transaction(t => {
-                    return TratamientoProductos.update({
-                        cantidad_producto: req.body.cantidad_producto
-                    }, {
-                        where: {
-                            id_tratamiento: req.body.id_tratamiento,
-                            id_producto: req.body.id_producto
-                        },
-                        transaction: t,
-                        limit: 1,
-                        lock: true
-                    }).then(() => {
-                        return ({
-                            'message': 'El tratamiento fue actualizado de manera correcta',
-                            'deleted': true
-                        })
-                    })
-                })
-                .then(valor => {
-                    res.json(valor)
-                });
-        } catch (error) {
-            res.json({
-                'message': 'El tratamiento no fue actualizado, vuelva a intentarlo y revise los datos enviados',
-                'deleted': false
-            })
-        }
-    });
-
     router.post('/inicia_tratamiento/:id', (req, res) => {
         try {
             return conexion.query("SELECT inicia_tratamiento(" + req.params.id + ")")
                 .then(([results, metadata]) => {
-                    res.json({
-                        "message": 'El tratamiento se ha iniciado.',
-                        "error": false
-                    }).status(200);
+                    if (results[0].inicia_tratamiento) {
+                        res.json({
+                            "message": 'El tratamiento se ha iniciado.',
+                            "error": false
+                        }).status(200);
+                    } else {
+                        res.json({
+                            "message": 'El tratamiento no se ha iniciado, revise la cantidad de productos disponibles para el mismo.',
+                            "error": true
+                        }).status(200);
+                    }
+                    
+                    
                 })
                 .catch(err => {
                     res.json({
-                        'message': 'El tratamiento no se ha iniciado.',
+                        'message': 'El tratamiento no se ha iniciado, revise la cantidad de productos disponibles para el mismo.',
                         "error": true
                     }).status(200);
                 })
         } catch (error) {
             res.json({
-                'message': 'El tratamiento no se ha iniciado.',
+                'message': 'El tratamiento no se ha iniciado, revise la información enviada.',
                 "error": true
             }).status(500);
         }
@@ -234,7 +260,7 @@ function initTratamientos(instanciaBD) {
         */
         try {
             console.log(req.body.insumos_desechados);
-            return conexion.query("SELECT termina_tratamiento(" + req.body.id_tratamiento +","+ "'{"+req.body.inservible+"}'"+")")
+            return conexion.query("SELECT termina_tratamiento(" + req.body.id_tratamiento + "," + "'{" + req.body.inservible + "}'" + ")")
                 .then(([results, metadata]) => {
                     res.json({
                         "message": 'El tratamiento se ha terminado de manera correcta.',

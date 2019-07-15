@@ -1,18 +1,6 @@
-//TODO: Se borro el campo duración se debe de inicializar la base de datos de nuevo 
+
 
 const DataTypes = require('sequelize/lib/data-types');
-
-/*
-id,
-nombre,
-precio,
-descripcion,
-fecha_creacion,
-fecha_actualizacion
-
-
-
-*/
 
 
 module.exports = function (sequelize) {
