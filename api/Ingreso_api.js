@@ -259,10 +259,7 @@ function initIngreso(instanciaBD) {
 
                                     promiseEquipo.catch(() => {
                                         res.status(200);
-                                        errorArray.push({
-                                            'message': 'El Equipo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                            'updated': false
-                                        })
+                                        errorArray.push('El Equipo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta')
                                         idFails.push(id);
                                         updateAll = false;
                                     });
@@ -282,10 +279,7 @@ function initIngreso(instanciaBD) {
 
                                     promiseInsumo.catch(() => {
                                         res.status(500);
-                                        errorArray.push({
-                                            'message': 'El Instrumento con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                            'updated': false
-                                        })
+                                        errorArray.push('El Insumo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta')
                                         idFails.push(id);
                                         updateAll = false;
                                     });
@@ -305,10 +299,7 @@ function initIngreso(instanciaBD) {
                                     promiseInstrumento
                                         .catch(() => {
                                             res.status(200);
-                                            errorArray.push({
-                                                'message': 'El Insumo con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                                'updated': false
-                                            })
+                                            errorArray.push('El Instrumento con el código ' + id + ' no fue actualizado, revise si la información ingresada es correcta')
                                             idFails.push(id);
                                             updateAll = false;
                                         });
@@ -316,29 +307,24 @@ function initIngreso(instanciaBD) {
                                     return promiseInstrumento
                                 }
                             } else {
-                                errorArray.push({
-                                    'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                    'updated': false
-                                });
+                                errorArray.push('El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta');
                                 idFails.push(element.id)
                                 updateAll = false;
                             }
                         })
                         .catch(() => {
-                            errorArray.push({
-                                'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                                'updated': false
-                            });
+                            errorArray.push(
+                                'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta'
+                            );
                             updateAll = false;
                         })
                     promises.push(promiseProducto);
                     return promiseProducto
                 })
             } catch (error) {
-                errorArray.push({
-                    'message': 'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta',
-                    'updated': false
-                });
+                errorArray.push(
+                    'El producto con el código ' + element.id + ' no fue actualizado, revise si la información ingresada es correcta'
+                );
                 idFails.push(element.id);
             }
         });
@@ -416,7 +402,7 @@ function initIngreso(instanciaBD) {
                     }).then(() => {
                         return ({
                             'message': 'El producto fue borrado de manera correcta',
-                            'deleted': true
+                            'restored': true
                         })
                     })
                 })
@@ -426,48 +412,14 @@ function initIngreso(instanciaBD) {
         } catch (error) {
             res.json({
                 'message': 'El producto no fue borrado, vuelva a intentarlo y revise los datos enviados',
-                'deleted': false
+                'restored': false
             })
         }
     })
-
-
-
-
-
-
     return router;
 }
 
 module.exports.initIngreso = initIngreso
-
-/*
-return Productos.findOrCreate({
-        where: {
-            id: element.id
-        },
-        defaults: {
-            nombre: parametros.marca,
-            descripcion: parametros.descripcion,
-            precio_unitario: parametros.estado,
-            categoria: 'Equipo'
-        },
-        transaction: transaction
-    }).then(
-        Equipo.findOrCreate({
-            where: {
-                id_producto: parametros.id
-            },
-            defaults: {
-                marca: parametros.marca,
-                observacion: parametros.observacion,
-                estado: parametros.estado,
-                stock: parametros.stock
-            },
-            transaction: transaction
-        })
-    )
-*/
 
 
 function updateProducto(updateData, Productos, transaction) {

@@ -11,26 +11,34 @@ function initInventarios(instanciaBD) {
         {
             nombre: 'nombre en String',
             descripcion: 'descripcion en String'
+            observacion: "Observacion de prueba"
         }
     */
         try {
-            return conexion.query("SELECT control_inventario('" + req.body.nombre + "','" + req.body.descripcion + "')")
+            return conexion.query("SELECT control_inventario('" + req.body.nombre + "','" + req.body.descripcion + "','"+req.body.observacion+"')")
                 .then(([results, metadata]) => {
-                    res.json({
-                        'message': 'El inventario se ha creado con éxito.',
-                        'createdInventory': results,
-                    }).status(200);
+                    if (results[0].control_inventario){
+                        res.json({
+                            'message': 'El inventario se ha creado con éxito.',
+                            'error': false
+                        }).status(200);
+                    } else {
+                        res.json({
+                            'message': 'El inventario se ha creado con éxito.',
+                            'error': true
+                        }).status(200);
+                    }
                 })
                 .catch(err => {
                     res.json({
                         'message': 'El inventario no se ha creado con éxito.',
-                        'createdInventory': false,
-                    }).status(200);
+                        'error': true
+                    }).status(500);
                 })
         } catch (error) {
             res.json({
                 'message': 'El inventario no se ha creado con éxito.',
-                'createdInventory': false,
+                'error': true
             }).status(500);
 
         }
@@ -38,7 +46,7 @@ function initInventarios(instanciaBD) {
 
     router.get('/control/all', (req, res) => {
         try {
-            return conexion.query("SELECT id,nombre,descripcion,fecha_creacion,fecha_actualizacion,persona_realiza FROM inventarios JOIN inventario_controles ON inventarios.id = inventario_controles.id_inventario;")
+            return conexion.query("SELECT id,nombre,descripcion,observacion,fecha_creacion,persona_realiza FROM inventarios JOIN inventario_controles ON inventarios.id = inventario_controles.id_inventario;")
                 .then(([results, metadata]) => {
                     res.json({
                         error: false,
@@ -49,7 +57,7 @@ function initInventarios(instanciaBD) {
                     res.json({
                         error: true,
                         data: []
-                    }).status(200);
+                    }).status(500);
                 })
         } catch (error) {
             res.json({
@@ -94,33 +102,40 @@ function initInventarios(instanciaBD) {
                 "persona_entrega": "Cedula de la persona que entrega",
                 "productos": [{
                         "cantidad": 14,
-                        "idProducto": 15
+                        "id_producto": 15
                     },
                     {
                         "cantidad": 14,
-                        "idProducto": 15
+                        "id_producto": 15
                     }
                 ]
             }
         */
         try {
-            return conexion.query("SELECT  entrega_inventario('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.observacion + "','" + JSON.stringify(req.body.productos) + "','" + req.body.persona_entrega + "')")
+            return conexion.query("SELECT entrega_inventario('" + req.body.nombre + "','" + req.body.descripcion + "','" + req.body.observacion + "','" + JSON.stringify(req.body.productos) + "','" + req.body.persona_entrega + "')")
                 .then(([results, metadata]) => {
-                    res.json({
-                        'message': 'El inventario de entrega se ha creado con éxito con todos los productos ingresados.',
-                        'createdInventory': results,
-                    }).status(200);
+                    if (results[0].entrega_inventario){
+                        res.json({
+                            'message': 'El inventario de entrega se ha creado con éxito con todos los productos ingresados.',
+                            'error': false
+                        }).status(200);
+                    }else {
+                        res.json({
+                            'message': 'El inventario de entrega se ha creado con éxito con todos los productos ingresados.',
+                            'error': true
+                        }).status(200);
+                    }
                 })
                 .catch(err => {
                     res.json({
                         'message': 'El inventario de entrega no se ha creado con éxito con todos los productos ingresados.',
-                        'createdInventory': false,
+                        'error': true
                     }).status(200);
                 })
         } catch (error) {
             res.json({
                 'message': 'El inventario de entrega no se ha creado con éxito con todos los productos ingresados.',
-                'createdInventory': false,
+                'error': true
             }).status(500);
 
         }
@@ -151,7 +166,7 @@ function initInventarios(instanciaBD) {
 
     router.get('/entrega/produtos/all', (req, res) => {
         try {
-            return conexion.query("select id_inventario,id_producto,nombre,descripcion,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto ORDER BY id_inventario;")
+            return conexion.query("select id_inventario,id_producto,inventarios.nombre as nombre_inventario,prod.nombre as nombre_producto,prod.descripcion as descripcion_producto,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad as cantidad_producto from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto JOIN inventarios ON inventarios.id = inv.id_inventario ORDER BY id_inventario;")
                 .then(([results, metadata]) => {
                     res.json({
                         error: false,
@@ -175,7 +190,7 @@ function initInventarios(instanciaBD) {
 
     router.get('/entrega/produtos/nombre/:nombre', (req, res) => {
         try {
-            return conexion.query("select id_inventario,id_producto,nombre,descripcion,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto WHERE nombre=" + req.params.nombre + " ORDER BY id_inventario;")
+            return conexion.query("select id_inventario,id_producto,prod.nombre as nombre_producto,prod.descripcion as descripcion_producto,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad as cantidad_producto from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto JOIN inventarios ON inventarios.id = inv.id_inventario WHERE inventarios.nombre='" + req.params.nombre + "' ORDER BY id_inventario;")
                 .then(([results, metadata]) => {
                     res.json({
                         error: false,
@@ -198,7 +213,7 @@ function initInventarios(instanciaBD) {
 
     router.get('/entrega/produtos/id/:id', (req, res) => {
         try {
-            return conexion.query("SELECT id_inventario,id_producto,nombre,descripcion,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto WHERE id_inventario=" + req.params.id + " ORDER BY id_inventario ;")
+            return conexion.query("select inventarios.nombre as nombre_inventario,id_producto,prod.nombre as nombre_producto,prod.descripcion as descripcion_producto,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad as cantidad_producto from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto JOIN inventarios ON inventarios.id = inv.id_inventario WHERE inventarios.id=" + req.params.id + " ORDER BY id_inventario ;")
                 .then(([results, metadata]) => {
                     res.json({
                         error: false,
