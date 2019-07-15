@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+
+//TODO: Me quede aqui no esta hecho ninguno
+
 function initTratamientos(instanciaBD) {
     var Tratamientos = instanciaBD.Tratamientos;
     var TratamientoProductos = instanciaBD.TratamientoProductos;
