@@ -164,7 +164,7 @@ function initInventarios(instanciaBD) {
         }
     });
 
-    router.get('/entrega/produtos/all', (req, res) => {
+    router.get('/entrega/productos/all', (req, res) => {
         try {
             return conexion.query("select id_inventario,id_producto,inventarios.nombre as nombre_inventario,prod.nombre as nombre_producto,prod.descripcion as descripcion_producto,precio_unitario,fecha, persona_entrega, persona_recibe,cantidad as cantidad_producto from inventario_entregas as inv JOIN productos as prod ON prod.id=inv.id_producto JOIN inventarios ON inventarios.id = inv.id_inventario ORDER BY id_inventario;")
                 .then(([results, metadata]) => {
