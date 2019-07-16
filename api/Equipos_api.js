@@ -12,7 +12,6 @@ function initEquipos(instanciaBD) {
     router.get('/all', (req, res) => {
         return conexion.query("SELECT id, nombre, descripcion, observacion, precio_unitario, stock, marca, estado, categoria,fecha_creacion, fecha_actualizacion FROM equipos JOIN productos ON productos.id = equipos.id_producto WHERE productos.activo=true")
             .then(([results, metadata]) => {
-
                 res.json({
                     "error": false,
                     "data": results

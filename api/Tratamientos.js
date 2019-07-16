@@ -77,7 +77,7 @@ function initTratamientos(instanciaBD) {
         try {
             return conexion.query("SELECT ingreso_productos_tratamiento('" + req.body.id_tratamiento + "','" + JSON.stringify(req.body.productos) + "');")
                 .then(([results, metadata]) => {
-                    if (results[0].ingreso_tratamiento) {
+                    if (results[0].ingreso_productos_tratamiento) {
                         res.json({
                             'message': 'El tratamiento se ha actualizado con exito',
                             "error": false
@@ -262,10 +262,17 @@ function initTratamientos(instanciaBD) {
             console.log(req.body.insumos_desechados);
             return conexion.query("SELECT termina_tratamiento(" + req.body.id_tratamiento + "," + "'{" + req.body.inservible + "}'" + ")")
                 .then(([results, metadata]) => {
-                    res.json({
-                        "message": 'El tratamiento se ha terminado de manera correcta.',
-                        "error": false
-                    }).status(200);
+                    if (results[0].termina_tratamiento) {
+                        res.json({
+                            "message": 'El tratamiento se ha terminado de manera correcta.',
+                            "error": false
+                        }).status(200);
+                    } else {
+                        res.json({
+                            'message': 'El tratamiento no se ha terminado de manera correcta.',
+                            "error": true
+                        }).status(200);
+                    }
                 })
                 .catch(err => {
                     res.json({
