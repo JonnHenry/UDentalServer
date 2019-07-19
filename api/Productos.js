@@ -9,7 +9,10 @@ function initProductos(instanciaBD) {
         try {
             productos.findAll({ 
                 where: { activo: true },
-                attributes: ['id', 'nombre',"descripcion", "precio_unitario", "categoria", "stock"] 
+                attributes: ['id', 'nombre',"descripcion", "precio_unitario", "categoria", "stock"],
+                order: [
+                    ['id', 'ASC']
+                ] 
             }
             ).then(projects => {
                 res.json({
