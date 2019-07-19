@@ -4,6 +4,7 @@ var instrumentosApi = require('./Instrumentos_api').initInstrumentos;
 var ingresoDatosApi = require('./Ingreso_api').initIngreso;
 var inventariosApi = require('./Inventarios_api').initInventarios
 var tratamientosApi = require('./Tratamientos').initTratamientos
+var productosApi = require('./Productos').initProductos
 
 /*
      conexionBD: conexionBD,
@@ -44,6 +45,11 @@ function inicialiceRouter(instanciaBD, app) {
                 conexionBD: instanciaBD.conexionBD,
                 Tratamientos: instanciaBD.models.Tratamientos,
                 TratamientoProductos: instanciaBD.models.TratamientoProductos
+            }))
+
+            app.use('/productos', productosApi({
+                conexionBD: instanciaBD.conexionBD,
+                Productos: instanciaBD.models.Productos
             }))
             resolve(true);
         } catch (error) {
