@@ -23,7 +23,7 @@
     "express": "^4.17.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.8.7"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
